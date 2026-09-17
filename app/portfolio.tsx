@@ -16,7 +16,6 @@ import {
   MapPin,
   Code2,
   Cpu,
-  Copy,
   Check,
   Terminal,
   Puzzle,
@@ -27,6 +26,7 @@ import {
 } from 'lucide-react';
 import { PremiumCursor } from './premium-cursor';
 import { ProfileBackground, CareerHistory } from './profile-background';
+import { ContactPage } from './contact-page';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -44,7 +44,7 @@ import {
   CommandItem,
 } from '@/components/ui/command';
 
-type View = 'overview' | 'projects' | 'experience' | 'about';
+type View = 'overview' | 'projects' | 'experience' | 'about' | 'contact';
 type Filter =
   | 'All projects'
   | 'iOS apps'
@@ -78,6 +78,7 @@ const nav = [
   { id: 'projects', name: 'Projects', icon: Layers3 },
   { id: 'experience', name: 'Experience', icon: BriefcaseBusiness },
   { id: 'about', name: 'About me', icon: UserRound },
+  { id: 'contact', name: 'Contact', icon: Mail },
 ] as const;
 const projects: Project[] = [
   {
@@ -382,14 +383,9 @@ export default function Portfolio() {
   const [filter, setFilter] = useState<Filter>('All projects');
   const [selected, setSelected] = useState<Project | null>(null);
   const [commandOpen, setCommandOpen] = useState(false);
-  const [contactOpen, setContactOpen] = useState(false);
   const [dark, setDark] = useState(false);
-  const [copyState, setCopyState] = useState<'idle' | 'copied' | 'failed'>(
-    'idle',
-  );
   const pageHeading = useRef<HTMLHeadingElement>(null);
   const didMount = useRef(false);
-  const copyTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     const syncHash = () => {
@@ -403,7 +399,6 @@ export default function Portfolio() {
     document.documentElement.classList.remove('dark');
     return () => {
       window.removeEventListener('hashchange', syncHash);
-      if (copyTimer.current) clearTimeout(copyTimer.current);
     };
   }, []);
   useEffect(() => {
@@ -421,7 +416,6 @@ export default function Portfolio() {
       if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'k') {
         event.preventDefault();
         setSelected(null);
-        setContactOpen(false);
         setCommandOpen((open) => !open);
       }
     };
@@ -439,19 +433,8 @@ export default function Portfolio() {
     setSelected(project);
   };
   const openContact = () => {
-    setCommandOpen(false);
-    setCopyState('idle');
-    setContactOpen(true);
-  };
-  const copyEmail = async () => {
-    try {
-      await navigator.clipboard.writeText(email);
-      setCopyState('copied');
-    } catch {
-      setCopyState('failed');
-    }
-    if (copyTimer.current) clearTimeout(copyTimer.current);
-    copyTimer.current = setTimeout(() => setCopyState('idle'), 4000);
+    setSelected(null);
+    navigate('contact');
   };
   const currentTitle = nav.find((item) => item.id === view)?.name;
   const visibleProjects = projects.filter(
@@ -556,6 +539,9 @@ export default function Portfolio() {
         </header>
         <main id="main" className="content" tabIndex={-1}>
           <div className="page-view" key={view}>
+            {view === 'contact' && (
+              <ContactPage dark={dark} headingRef={pageHeading} />
+            )}
             {view === 'overview' && (
               <>
                 <section className="intro">
@@ -1100,58 +1086,6 @@ export default function Portfolio() {
               <span>Esc to close</span>
             </div>
           </Command>
-        </DialogContent>
-      </Dialog>
-      <Dialog open={contactOpen} onOpenChange={setContactOpen}>
-        <DialogContent className="contact-dialog">
-          <DialogHeader>
-            <span className="contact-spark" aria-hidden="true">
-              ✳
-            </span>
-            <p className="eyebrow">GOOD THINGS START WITH A CONVERSATION</p>
-            <DialogTitle className="dialog-title">Let’s connect.</DialogTitle>
-            <DialogDescription className="dialog-description">
-              Have an idea, a question, or just want to say hello? My inbox is a
-              good place to start.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="email-row">
-            <a href={`mailto:${email}`}>{email}</a>
-            <Button
-              variant="ghost"
-              size="icon"
-              aria-label="Copy email address"
-              onClick={copyEmail}
-            >
-              {copyState === 'copied' ? <Check /> : <Copy />}
-            </Button>
-          </div>
-          <p className="copy-status" role="status">
-            {copyState === 'copied'
-              ? 'Email address copied.'
-              : copyState === 'failed'
-                ? 'Copy is unavailable. Select the address above or use Open email.'
-                : ''}
-          </p>
-          <a className="external-action accent-action" href={`mailto:${email}`}>
-            <Mail size={17} /> Open email <ArrowUpRight size={17} />
-          </a>
-          <div className="contact-social">
-            <a
-              href="https://github.com/ajaykareer"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              GitHub <ArrowUpRight size={16} />
-            </a>
-            <a
-              href="https://linkedin.com/in/ajaykareer"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              LinkedIn <ArrowUpRight size={16} />
-            </a>
-          </div>
         </DialogContent>
       </Dialog>
     </div>
