@@ -27,13 +27,18 @@ npx --yes --package=node@22.22.0 node node_modules/vinext/dist/cli.js build
 
 - `app/portfolio.tsx`: project data, contact details, biography, experience, and interactions.
 - `app/globals.css`: colors, typography, layout, animations, and responsive styles.
+- `app/premium.css`: refined buttons, app artwork, profile layout, and cursor styling.
+- `app/premium-cursor.tsx`: desktop cursor with native fallbacks for touch and reduced motion.
+- `app/profile-background.tsx`: education, certifications, and earlier employment.
 - `app/layout.tsx`: page title and search metadata.
 - `public/projects/`: recovered portrait and project screenshots.
 
 Current role confirmed by Ajay: Software & Hardware Engineer, CreativePOS, June 1, 2024–present.
 
-Historical content and assets recovered from ajaykareer.com and Ajay's public GitHub repositories. AKK Web Gallery and DavosBet are adaptations of Diego Arndt's projects; their detail views include attribution. CreativePOS responsibilities and customer outcomes have not been invented.
+Featured work includes Creative POS Reporting, Kareer’s Walls, Word Shuffle, and Windows Update Manager. The weather app appears last. Creative POS Reporting links to its public App Store listing; Kareer’s Walls has no public download link yet. iOS implementation frameworks are intentionally unspecified until confirmed by Ajay.
 
-The contact action opens the visitor's email application. No contact messages are collected or stored by this site. Theme preference is the only persisted browser data. No analytics or tracking are installed.
+Historical content and assets were recovered from ajaykareer.com, Ajay's GitHub repositories, and his LinkedIn profile. The current portrait, education, certifications, and earlier roles were checked on LinkedIn. See `docs/content-sources.md` for provenance and remaining content updates. AKK Web Gallery and DavosBet are adaptations of Diego Arndt's projects; their detail views include attribution.
+
+The contact action opens the visitor's email application. No contact messages are collected or stored by this site. Every fresh page load starts in light mode; the toggle changes theme for the current visit. No analytics or tracking are installed. Add the downloadable résumé when Ajay supplies the final file.
 
 Keep this folder backed up or push it to your own Git repository to retain the complete source.

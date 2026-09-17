@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
+import './premium.css';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -14,19 +15,29 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: 'Ajay Kareer — Software & Hardware Engineer',
-  description: 'Ajay Kareer is a Software & Hardware Engineer at CreativePOS. Explore web applications, practical tools, and the person behind the work.',
+  description:
+    'Ajay Kareer is a Software & Hardware Engineer at CreativePOS. Explore iOS apps, Salesforce projects, and practical systems tools.',
   icons: { icon: '/favicon.svg' },
   metadataBase: new URL('https://ajay-kareer-portfolio.goli15.chatgpt.site'),
   openGraph: {
     title: 'Ajay Kareer — Software & Hardware Engineer',
-    description: 'Software meets the real world. Explore my projects, experience, and the person behind the work.',
+    description:
+      'Software meets the real world. Explore my projects, experience, and the person behind the work.',
     type: 'website',
-    images: [{ url: '/og.png', width: 1672, height: 941, alt: 'Ajay Kareer — Software & Hardware Engineer' }],
+    images: [
+      {
+        url: '/og.png',
+        width: 1672,
+        height: 941,
+        alt: 'Ajay Kareer — Software & Hardware Engineer',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Ajay Kareer — Software & Hardware Engineer',
-    description: 'Software meets the real world. Explore my projects and experience.',
+    description:
+      'Software meets the real world. Explore my projects and experience.',
     images: ['/og.png'],
   },
 };
