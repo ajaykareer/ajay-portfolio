@@ -21,6 +21,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { ContactOrbit } from './contact-orbit';
+import { Reveal } from './page-motion';
 import {
   contactEmail,
   contactMailto,
@@ -145,7 +146,7 @@ export function ContactPage({
           <br className="contact-desktop-break" /> I’d love to hear about it.
         </p>
       </header>
-      <div className="contact-studio">
+      <Reveal className="contact-studio" delay={0.14}>
         <div className="contact-form-panel">
           <div className="contact-form-title">
             <span className="eyebrow">STRAIGHT TO MY INBOX</span>
@@ -336,8 +337,8 @@ export function ContactPage({
           </div>
         </div>
         <ContactOrbit dark={dark} />
-      </div>
-      <div className="contact-links">
+      </Reveal>
+      <Reveal className="contact-links">
         <span>Different ways to say hello.</span>
         <div>
           <a
@@ -355,7 +356,7 @@ export function ContactPage({
             GitHub <ArrowUpRight size={16} />
           </a>
         </div>
-      </div>
+      </Reveal>
     </section>
   );
 }

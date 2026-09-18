@@ -824,13 +824,20 @@ h1 em {
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *:before,
-  *:after {
+  html:not([data-motion='full']) *,
+  html:not([data-motion='full']) *:before,
+  html:not([data-motion='full']) *:after {
     animation: none !important;
     transition: none !important;
     scroll-behavior: auto !important;
   }
+}
+html[data-motion='reduced'] *,
+html[data-motion='reduced'] *::before,
+html[data-motion='reduced'] *::after {
+  animation: none !important;
+  transition: none !important;
+  scroll-behavior: auto !important;
 }
 /* Application views and interactive states */
 .nav-item {

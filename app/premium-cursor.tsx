@@ -1,28 +1,34 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
+import { usePortfolioMotion } from './page-motion';
 
 /** Small desktop accent; touch, text inputs and reduced-motion retain native pointers. */
 export function PremiumCursor() {
+  const { reduced } = usePortfolioMotion();
   const cursor = useRef<HTMLDivElement>(null);
   useEffect(() => {
-    const media = window.matchMedia(
-      '(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)',
-    );
+    const media = window.matchMedia('(hover: hover) and (pointer: fine)');
     const node = cursor.current;
     if (!node) return;
     let frame = 0;
     let x = 0;
     let y = 0;
+    let visible = false;
+    let interactive = false;
     const hide = () => {
       cancelAnimationFrame(frame);
       frame = 0;
-      node.dataset.visible = 'false';
-      document.documentElement.classList.remove('has-custom-cursor');
+      if (visible) {
+        visible = false;
+        node.dataset.visible = 'false';
+        document.documentElement.classList.remove('has-custom-cursor');
+      }
     };
     const move = (event: PointerEvent) => {
       const target = event.target instanceof Element ? event.target : null;
       if (
+        reduced ||
         !media.matches ||
         event.pointerType !== 'mouse' ||
         target?.closest('input, textarea, select, [contenteditable="true"]')
@@ -32,14 +38,21 @@ export function PremiumCursor() {
       }
       x = event.clientX;
       y = event.clientY;
-      node.dataset.interactive = String(
-        Boolean(target?.closest('a, button, [role="button"], [role="option"]')),
+      const nextInteractive = Boolean(
+        target?.closest('a, button, [role="button"], [role="option"]'),
       );
+      if (interactive !== nextInteractive) {
+        interactive = nextInteractive;
+        node.dataset.interactive = String(interactive);
+      }
       if (!frame)
         frame = requestAnimationFrame(() => {
           node.style.transform = `translate3d(${x}px, ${y}px, 0)`;
-          node.dataset.visible = 'true';
-          document.documentElement.classList.add('has-custom-cursor');
+          if (!visible) {
+            visible = true;
+            node.dataset.visible = 'true';
+            document.documentElement.classList.add('has-custom-cursor');
+          }
           frame = 0;
         });
     };
@@ -62,7 +75,7 @@ export function PremiumCursor() {
       window.removeEventListener('blur', hide);
       media.removeEventListener('change', hide);
     };
-  }, []);
+  }, [reduced]);
   return (
     <div
       ref={cursor}

@@ -29,7 +29,7 @@ npx --yes --package=node@22.22.0 node node_modules/vinext/dist/cli.js build
 - `app/globals.css`: colors, typography, layout, animations, and responsive styles.
 - `app/premium.css`: refined buttons, app artwork, profile layout, and cursor styling.
 - `app/premium-cursor.tsx`: desktop cursor with native fallbacks for touch and reduced motion.
-- `app/page-motion.tsx` and `app/motion.css`: scroll-triggered entrances, staggered cards, pointer-responsive depth, subtle portrait movement, and a page scroll indicator. Native browser animation APIs keep this independent of extra animation libraries.
+- `app/page-motion.tsx` and `app/motion.css`: Motion-powered page transitions, staggered scroll entrances, a persistent motion preference, and a native CSS scroll progress indicator.
 - `app/profile-background.tsx`: education, certifications, and earlier employment.
 - `app/contact-page.tsx` and `app/contact.css`: dedicated Contact view, form feedback, and responsive layout.
 - `app/contact-orbit.tsx`: lazy-loaded COBE globe, moving starfield, drag/keyboard controls, and reduced-motion handling.
@@ -55,6 +55,8 @@ The animated globe and stars run only in the Contact view, pause when hidden/off
 
 ## Motion behavior
 
-Content starts visible before JavaScript. An IntersectionObserver progressively enhances each view with one-time entrances; newly filtered project cards are observed too. Entrances stop on keyboard focus, when reduced motion is requested, and before printing. Pointer tilt and portrait depth apply only to fine-pointer devices without reduced motion. Scrolling stays native. Observers, animation frames, and event listeners are cleaned up when changing views.
+Motion (the `motion` package) handles page exit/entry and one-time viewport reveals. Pages fade out before the next view mounts; cards rise in with a short stagger. Only opacity and transforms animate. Scroll stays native, with no JavaScript scroll handler, portrait parallax, animated blur, or pointer-driven card lighting. The progress line uses CSS scroll timelines where supported. Print and no-JavaScript styles keep content visible.
+
+The Motion switch beside the theme button follows the device’s reduced-motion preference by default. Visitors can explicitly enable or reduce motion for this site; their choice is saved locally. The same preference controls entrances, the cursor, globe, and stars. Keyboard focus reveals interactive items immediately. Navigation moves focus to the new heading after its page entrance finishes.
 
 Keep this folder backed up or push it to your own Git repository to retain the complete source.

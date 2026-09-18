@@ -11,12 +11,14 @@ import {
   Play,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { usePortfolioMotion } from './page-motion';
 
 const HOME_PHI = (349.02 * Math.PI) / 180;
 const HOME_THETA = 0.45;
 
 /** One animation loop for the globe and stars; stopped offscreen and when paused. */
 export function ContactOrbit({ dark }: { dark: boolean }) {
+  const { reduced } = usePortfolioMotion();
   const region = useRef<HTMLDivElement>(null);
   const canvas = useRef<HTMLCanvasElement>(null);
   const stars = useRef<HTMLCanvasElement>(null);
@@ -25,7 +27,6 @@ export function ContactOrbit({ dark }: { dark: boolean }) {
   const pointer = useRef<{ id: number; x: number; y: number } | null>(null);
   const settings = useRef({ dark, paused: false, reduced: false });
   const [paused, setPaused] = useState(false);
-  const [reduced, setReduced] = useState(false);
   const [availability, setAvailability] = useState<
     'loading' | 'ready' | 'fallback'
   >('loading');
@@ -33,8 +34,9 @@ export function ContactOrbit({ dark }: { dark: boolean }) {
   useEffect(() => {
     settings.current.dark = dark;
     settings.current.paused = paused;
+    settings.current.reduced = reduced;
     engine.current?.refresh();
-  }, [dark, paused]);
+  }, [dark, paused, reduced]);
 
   useEffect(() => {
     const host = region.current;
@@ -42,9 +44,6 @@ export function ContactOrbit({ dark }: { dark: boolean }) {
     const starCanvas = stars.current;
     if (!host || !globeCanvas || !starCanvas) return;
     const ctx = starCanvas.getContext('2d');
-    const media = window.matchMedia('(prefers-reduced-motion: reduce)');
-    settings.current.reduced = media.matches;
-    setReduced(media.matches);
     let disposed = false;
     let globe: Globe | undefined;
     let frame = 0;
@@ -144,17 +143,11 @@ export function ContactOrbit({ dark }: { dark: boolean }) {
       refresh();
     });
     intersection.observe(host);
-    const motionChanged = () => {
-      settings.current.reduced = media.matches;
-      setReduced(media.matches);
-      refresh();
-    };
     const contextLost = (event: Event) => {
       event.preventDefault();
       contextAvailable = false;
       setAvailability('fallback');
     };
-    media.addEventListener('change', motionChanged);
     document.addEventListener('visibilitychange', refresh);
     globeCanvas.addEventListener('webglcontextlost', contextLost);
     resize();
@@ -206,7 +199,6 @@ export function ContactOrbit({ dark }: { dark: boolean }) {
       cancelAnimationFrame(frame);
       observer.disconnect();
       intersection.disconnect();
-      media.removeEventListener('change', motionChanged);
       document.removeEventListener('visibilitychange', refresh);
       globeCanvas.removeEventListener('webglcontextlost', contextLost);
       globe?.destroy();

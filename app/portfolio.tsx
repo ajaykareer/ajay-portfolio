@@ -27,7 +27,14 @@ import {
 import { PremiumCursor } from './premium-cursor';
 import { ProfileBackground, CareerHistory } from './profile-background';
 import { ContactPage } from './contact-page';
-import { MotionPage, ScrollProgress } from './page-motion';
+import {
+  MotionProvider,
+  MotionToggle,
+  PageTransition,
+  MotionPage,
+  Reveal,
+  ScrollProgress,
+} from './page-motion';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -345,7 +352,12 @@ function ProjectCard({
   onOpen: (project: Project) => void;
 }) {
   return (
-    <article className="project-card">
+    <Reveal
+      as="article"
+      className="project-card"
+      delay={(index % 2) * 0.12}
+      distance={52}
+    >
       <button
         className="project-card-button"
         onClick={() => onOpen(project)}
@@ -375,7 +387,7 @@ function ProjectCard({
           <span key={tag}>{tag}</span>
         ))}
       </div>
-    </article>
+    </Reveal>
   );
 }
 
@@ -405,13 +417,12 @@ export default function Portfolio() {
   useEffect(() => {
     document.documentElement.classList.toggle('dark', dark);
   }, [dark]);
-  useEffect(() => {
+  const pageEntered = useCallback(() => {
     if (didMount.current) {
-      window.scrollTo({ top: 0, behavior: 'instant' });
       pageHeading.current?.focus({ preventScroll: true });
     }
     didMount.current = true;
-  }, [view]);
+  }, []);
   useEffect(() => {
     const key = (event: KeyboardEvent) => {
       if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'k') {
@@ -443,653 +454,684 @@ export default function Portfolio() {
   );
 
   return (
-    <div className="portfolio-app">
-      <PremiumCursor />
-      <ScrollProgress />
-      <a className="skip-link" href="#main">
-        Skip to content
-      </a>
-      <aside className="sidebar">
-        <a
-          className="monogram"
-          href="#overview"
-          aria-label="Ajay Kareer home"
-          onClick={() => navigate('overview')}
-        >
-          ak<span aria-hidden="true">✳</span>
+    <MotionProvider>
+      <div className="portfolio-app">
+        <PremiumCursor />
+        <ScrollProgress />
+        <a className="skip-link" href="#main">
+          Skip to content
         </a>
-        <div className="sidebar-identity">
-          <h2>Ajay Kareer</h2>
-          <p>Software & hardware engineer</p>
-        </div>
-        <p className="nav-label">EXPLORE</p>
-        <nav aria-label="Portfolio">
-          {nav.map(({ id, name, icon: Icon }, i) => (
-            <Button
-              variant="ghost"
-              className={`nav-item ${view === id ? 'active' : ''}`}
-              key={id}
-              aria-label={name}
-              aria-current={view === id ? 'page' : undefined}
-              onClick={() => navigate(id)}
-              title={name}
-            >
-              <Icon />
-              <span className="nav-name">{name}</span>
-              <span className="nav-number">0{i + 1}</span>
-            </Button>
-          ))}
-        </nav>
-        <div className="sidebar-bottom">
-          <p>HAVE SOMETHING IN MIND?</p>
-          <Button variant="ghost" className="say-hello" onClick={openContact}>
-            Let’s talk <ArrowUpRight />
-          </Button>
-          <div className="social-links">
-            <a
-              href="https://github.com/ajaykareer"
-              aria-label="GitHub"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <GitFork />
-            </a>
-            <a
-              href="https://linkedin.com/in/ajaykareer"
-              aria-label="LinkedIn"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <span className="linkedin-mark">in</span>
-            </a>
-            <a href={`mailto:${email}`} aria-label="Email Ajay">
-              <Mail />
-            </a>
+        <aside className="sidebar">
+          <a
+            className="monogram"
+            href="#overview"
+            aria-label="Ajay Kareer home"
+            onClick={() => navigate('overview')}
+          >
+            ak<span aria-hidden="true">✳</span>
+          </a>
+          <div className="sidebar-identity">
+            <h2>Ajay Kareer</h2>
+            <p>Software & hardware engineer</p>
           </div>
-        </div>
-      </aside>
-      <div className="main-shell">
-        <header className="topbar">
-          <div>
-            <span className="breadcrumb-muted">Portfolio</span>
-            <span className="breadcrumb-slash">/</span>
-            {currentTitle}
-          </div>
-          <div className="top-actions">
-            <Button
-              variant="ghost"
-              className="command-button"
-              onClick={() => setCommandOpen(true)}
-              aria-label="Quick jump, Control or Command K"
-            >
-              <CommandIcon size={15} />
-              <span>Quick jump</span>
-              <kbd>Ctrl K</kbd>
+          <p className="nav-label">EXPLORE</p>
+          <nav aria-label="Portfolio">
+            {nav.map(({ id, name, icon: Icon }, i) => (
+              <Button
+                variant="ghost"
+                className={`nav-item ${view === id ? 'active' : ''}`}
+                key={id}
+                aria-label={name}
+                aria-current={view === id ? 'page' : undefined}
+                onClick={() => navigate(id)}
+                title={name}
+              >
+                <Icon />
+                <span className="nav-name">{name}</span>
+                <span className="nav-number">0{i + 1}</span>
+              </Button>
+            ))}
+          </nav>
+          <div className="sidebar-bottom">
+            <p>HAVE SOMETHING IN MIND?</p>
+            <Button variant="ghost" className="say-hello" onClick={openContact}>
+              Let’s talk <ArrowUpRight />
             </Button>
-            <span className="top-divider" />
-            <Button
-              variant="ghost"
-              size="icon"
-              className="theme-button"
-              onClick={toggleTheme}
-              aria-label={`Switch to ${dark ? 'light' : 'dark'} theme`}
-              title={`Switch to ${dark ? 'light' : 'dark'} theme`}
-            >
-              {dark ? <Sun /> : <Moon />}
-            </Button>
-          </div>
-        </header>
-        <main id="main" className="content" tabIndex={-1}>
-          <MotionPage key={view}>
-            {view === 'contact' && (
-              <ContactPage dark={dark} headingRef={pageHeading} />
-            )}
-            {view === 'overview' && (
-              <>
-                <section className="intro">
-                  <div className="intro-copy">
-                    <p className="eyebrow">
-                      <span className="small-spark" aria-hidden="true">
-                        ✳
-                      </span>{' '}
-                      HELLO, I’M AJAY
-                    </p>
-                    <h1 ref={pageHeading} tabIndex={-1}>
-                      Software meets
-                      <br />
-                      the <em>real world.</em>
-                    </h1>
-                    <p className="intro-description">
-                      I build iOS apps, business tools, and the systems behind
-                      them. Software & Hardware Engineer at{' '}
-                      <strong>CreativePOS.</strong>
-                    </p>
-                    <div className="hero-actions">
-                      <Button
-                        className="primary-action"
-                        onClick={() => navigate('projects')}
-                      >
-                        Explore my projects <ArrowUpRight />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        className="text-action"
-                        onClick={openContact}
-                      >
-                        Get in touch <ArrowRight size={16} />
-                      </Button>
-                    </div>
-                    <div className="location">
-                      <MapPin size={14} /> Ajax, Ontario <span>·</span> Always
-                      curious. Always building.
-                    </div>
-                  </div>
-                  <div className="portrait-wrap">
-                    <div className="portrait-frame">
-                      <img
-                        src="/projects/ajay-linkedin.jpg"
-                        alt="Ajay Kareer"
-                        width="800"
-                        height="800"
-                      />
-                      <span className="portrait-caption">
-                        ENGINEER. DEVELOPER. BUILDER.
-                      </span>
-                    </div>
-                    <div className="portrait-sticker">
-                      <Smartphone />
-                      <span>
-                        Apps.
-                        <br />
-                        Systems.
-                        <br />
-                        Ideas.
-                      </span>
-                    </div>
-                    <span className="photo-mark" aria-hidden="true">
-                      ✳
-                    </span>
-                  </div>
-                </section>
-                <button
-                  className="current-role"
-                  onClick={() => navigate('experience')}
-                >
-                  <span className="role-icon">
-                    <Cpu />
-                  </span>
-                  <span className="role-copy">
-                    <span className="eyebrow">WHERE I AM NOW</span>
-                    <span className="role-title">
-                      Software & Hardware Engineer <span>@ CreativePOS</span>
-                    </span>
-                  </span>
-                  <span className="role-date">JUN 2024 — PRESENT</span>
-                  <ArrowUpRight className="role-arrow" />
-                </button>
-                <section className="selected-work">
-                  <div className="section-title">
-                    <div>
-                      <span className="eyebrow">
-                        iOS APPS, PLATFORMS & PRACTICAL TOOLS
-                      </span>
-                      <h2>
-                        Selected work
-                        <span>
-                          {' '}
-                          / {String(projects.length).padStart(2, '0')}
-                        </span>
-                      </h2>
-                    </div>
-                    <Button
-                      variant="ghost"
-                      onClick={() => navigate('projects')}
-                    >
-                      View all projects <ArrowRight size={16} />
-                    </Button>
-                  </div>
-                  <div className="project-grid">
-                    {projects.slice(0, 4).map((project, index) => (
-                      <ProjectCard
-                        key={project.id}
-                        project={project}
-                        index={index}
-                        onOpen={openProject}
-                      />
-                    ))}
-                  </div>
-                </section>
-              </>
-            )}
-
-            {view === 'projects' && (
-              <>
-                <div className="view-heading">
-                  <p className="eyebrow">SELECTED WORK / APPS & SYSTEMS</p>
-                  <h1 ref={pageHeading} tabIndex={-1}>
-                    Curiosity, <em>in practice.</em>
-                  </h1>
-                  <p>
-                    iOS products, Salesforce experiences, and tools built for
-                    real use.
-                  </p>
-                </div>
-                <div className="filter-bar">
-                  <div className="filter-buttons" aria-label="Filter projects">
-                    {(
-                      [
-                        'All projects',
-                        'iOS apps',
-                        'Systems',
-                        'Salesforce',
-                        'Web apps',
-                      ] as Filter[]
-                    ).map((item) => (
-                      <Button
-                        variant="ghost"
-                        key={item}
-                        onClick={() => setFilter(item)}
-                        aria-pressed={filter === item}
-                        className={`filter-button ${filter === item ? 'is-active' : ''}`}
-                      >
-                        {item}
-                      </Button>
-                    ))}
-                  </div>
-                  <span className="results-count" role="status">
-                    {visibleProjects.length}{' '}
-                    {visibleProjects.length === 1 ? 'project' : 'projects'}
-                  </span>
-                </div>
-                <div className="project-grid full-project-grid">
-                  {visibleProjects.map((project) => (
-                    <ProjectCard
-                      key={project.id}
-                      project={project}
-                      index={projects.indexOf(project)}
-                      onOpen={openProject}
-                    />
-                  ))}
-                </div>
-              </>
-            )}
-
-            {view === 'experience' && (
-              <>
-                <div className="view-heading">
-                  <p className="eyebrow">THE JOURNEY SO FAR</p>
-                  <h1 ref={pageHeading} tabIndex={-1}>
-                    Code is only
-                    <br />
-                    <em>half the story.</em>
-                  </h1>
-                  <p>
-                    Working where software, hardware, and everyday use come
-                    together.
-                  </p>
-                </div>
-                <section className="experience-card">
-                  <div className="experience-top">
-                    <span className="large-icon">
-                      <Cpu />
-                    </span>
-                    <div>
-                      <span className="current-badge">CURRENT ROLE</span>
-                      <h2>CreativePOS</h2>
-                      <p>Software & Hardware Engineer</p>
-                    </div>
-                  </div>
-                  <div className="experience-date">
-                    <CalendarDays size={17} />
-                    <time dateTime="2024-06-01">June 1, 2024</time>
-                    <span>— Present</span>
-                  </div>
-                  <p className="experience-description">
-                    Since June 2024, I’ve been working as a Software & Hardware
-                    Engineer at CreativePOS. I built Creative POS Reporting to
-                    give our business partners access to sales reports and
-                    important POS notifications on their iPhone. My work
-                    connects the software people interact with and the hardware
-                    it runs on.
-                  </p>
-                  <div className="practice-grid">
-                    <div>
-                      <Code2 />
-                      <h3>Software</h3>
-                      <p>
-                        Thinking through how an application works, from its
-                        interface to the logic behind it.
-                      </p>
-                    </div>
-                    <div>
-                      <Monitor />
-                      <h3>Hardware</h3>
-                      <p>
-                        Bringing a hands-on engineering perspective to the
-                        devices behind the experience.
-                      </p>
-                    </div>
-                    <div>
-                      <Cpu />
-                      <h3>Point of sale</h3>
-                      <p>
-                        Working in the space where digital systems meet everyday
-                        business operations.
-                      </p>
-                    </div>
-                  </div>
-                </section>
-                <CareerHistory />
-                <section className="related-work">
-                  <p className="eyebrow">FROM MY PERSONAL TOOLBOX</p>
-                  <h2>A practical systems project</h2>
-                  <button
-                    className="related-project"
-                    onClick={() =>
-                      openProject(
-                        projects.find(
-                          (project) => project.id === 'windows-update-manager',
-                        )!,
-                      )
-                    }
-                  >
-                    <Terminal />
-                    <span>
-                      <strong>Windows Update Manager</strong>
-                      <span>
-                        A personal utility for Windows terminals, kiosks, and
-                        PCs.
-                      </span>
-                    </span>
-                    <ArrowUpRight />
-                  </button>
-                </section>
-              </>
-            )}
-
-            {view === 'about' && (
-              <>
-                <div className="view-heading">
-                  <p className="eyebrow">MORE THAN A JOB TITLE</p>
-                  <h1 ref={pageHeading} tabIndex={-1}>
-                    A builder.
-                    <br />A <em>curious mind.</em>
-                  </h1>
-                </div>
-                <section className="about-grid">
-                  <div className="about-photo">
-                    <img
-                      src="/projects/ajay-linkedin.jpg"
-                      alt="Ajay Kareer"
-                      width="800"
-                      height="800"
-                    />
-                    <span>AJAY KAREER / AJAX, ONTARIO</span>
-                  </div>
-                  <div className="about-copy">
-                    <h2>Hi, I’m Ajay.</h2>
-                    <p>
-                      I’m a software and hardware engineer based in Ajax,
-                      Ontario. My background spans business analysis,
-                      Salesforce, and web development. Today, I bring that
-                      perspective to iOS apps and point-of-sale systems at
-                      CreativePOS.
-                    </p>
-                    <p>
-                      I like the space between an idea and something you can
-                      actually use. Creative POS Reporting helps business
-                      partners stay close to their sales. Kareer’s Walls is my
-                      own take on a personal, easy-to-use wallpaper app. Word
-                      Shuffle and Windows Update Manager explore other sides of
-                      the same curiosity.
-                    </p>
-                    <p>
-                      I studied Web Design and Development at Humber College
-                      after completing a bachelor’s degree in Civil Engineering.
-                      That mix of analytical thinking and hands-on building
-                      still shapes how I approach a problem.
-                    </p>
-                    <Button className="primary-action" onClick={openContact}>
-                      Say hello <ArrowUpRight />
-                    </Button>
-                  </div>
-                </section>
-                <ProfileBackground />
-                <section className="toolbox">
-                  <div className="section-title">
-                    <div>
-                      <p className="eyebrow">TOOLS I’VE WORKED WITH</p>
-                      <h2>Different tools. Same curiosity.</h2>
-                    </div>
-                    <Code2 />
-                  </div>
-                  <div className="toolbox-grid">
-                    <div>
-                      <h3>Web development</h3>
-                      <div className="tags">
-                        {[
-                          'JavaScript',
-                          'React',
-                          'HTML & CSS',
-                          'Tailwind CSS',
-                          'Bootstrap',
-                          'Firebase',
-                        ].map((item) => (
-                          <span key={item}>{item}</span>
-                        ))}
-                      </div>
-                    </div>
-                    <div>
-                      <h3>Systems & platforms</h3>
-                      <div className="tags">
-                        {[
-                          'Windows Batch',
-                          'PowerShell',
-                          'Salesforce Aura',
-                          'Apex',
-                          'SOQL',
-                        ].map((item) => (
-                          <span key={item}>{item}</span>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                </section>
-              </>
-            )}
-          </MotionPage>
-          <footer className="page-footer">
-            <span>© {new Date().getFullYear()} Ajay Kareer</span>
-            <button onClick={openContact}>
-              Let’s make something useful.{' '}
-              <span className="orange" aria-hidden="true">
-                ✳
-              </span>
-            </button>
-          </footer>
-        </main>
-      </div>
-
-      <Dialog
-        open={selected !== null}
-        onOpenChange={(open) => {
-          if (!open) setSelected(null);
-        }}
-      >
-        <DialogContent className="project-dialog">
-          {selected && (
-            <>
-              <DialogHeader>
-                <p className="eyebrow">
-                  {selected.type} / {selected.year}
-                </p>
-                <DialogTitle className="dialog-title">
-                  {selected.title}
-                </DialogTitle>
-                <DialogDescription className="dialog-description">
-                  {selected.description}
-                </DialogDescription>
-              </DialogHeader>
-              {selected.gallery ? (
-                <div className="project-gallery">
-                  {selected.gallery.map((image) => (
-                    <figure key={image.file}>
-                      <img src={`/projects/${image.file}`} alt={image.label} />
-                      <figcaption>{image.label}</figcaption>
-                    </figure>
-                  ))}
-                </div>
-              ) : selected.image ? (
-                <div className={`dialog-image tone-${selected.tone}`}>
-                  <img
-                    src={`/projects/${selected.image}`}
-                    alt={`${selected.title} screenshot`}
-                  />
-                </div>
-              ) : selected.category === 'iOS apps' ? (
-                <div
-                  className={`project-visual detail-artwork tone-${selected.tone}`}
-                >
-                  <ProjectArtwork project={selected} />
-                </div>
-              ) : null}
-              {selected.role && (
-                <dl className="project-facts">
-                  <div>
-                    <dt>MY ROLE</dt>
-                    <dd>{selected.role}</dd>
-                  </div>
-                  <div>
-                    <dt>BUILT FOR</dt>
-                    <dd>{selected.audience}</dd>
-                  </div>
-                  <div>
-                    <dt>STATUS</dt>
-                    <dd>{selected.status}</dd>
-                  </div>
-                </dl>
-              )}
-              <p className="project-detail-text">{selected.details}</p>
-              <h3 className="detail-heading">What’s inside</h3>
-              <ul className="feature-list">
-                {selected.features.map((feature) => (
-                  <li key={feature}>
-                    <Check />
-                    {feature}
-                  </li>
-                ))}
-              </ul>
-              <div className="tags">
-                {selected.stack.map((tag) => (
-                  <span key={tag}>{tag}</span>
-                ))}
-              </div>
-              {selected.credit && (
-                <p className="project-credit">{selected.credit}</p>
-              )}
-              <div className="dialog-actions">
-                {selected.source && (
-                  <a
-                    className="external-action"
-                    href={selected.source}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <GitFork size={17} />
-                    View source
-                    <ArrowUpRight size={16} />
-                  </a>
-                )}
-                {selected.live && (
-                  <a
-                    className="external-action accent-action"
-                    href={selected.live}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    Open live project
-                    <ArrowUpRight size={16} />
-                  </a>
-                )}
-                {selected.storeUrl && (
-                  <a
-                    className="external-action accent-action"
-                    href={selected.storeUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <Smartphone size={17} />
-                    View on the App Store
-                    <ArrowUpRight size={16} />
-                  </a>
-                )}
-                {!selected.source && !selected.storeUrl && (
-                  <Button
-                    className="primary-action"
-                    onClick={() => {
-                      setSelected(null);
-                      openContact();
-                    }}
-                  >
-                    Ask me about this project
-                    <ArrowUpRight size={16} />
-                  </Button>
-                )}
-              </div>
-            </>
-          )}
-        </DialogContent>
-      </Dialog>
-      <Dialog open={commandOpen} onOpenChange={setCommandOpen}>
-        <DialogContent className="command-dialog">
-          <DialogHeader className="sr-only">
-            <DialogTitle>Quick jump</DialogTitle>
-            <DialogDescription>
-              Search pages and projects. Use the arrow keys and Enter to choose.
-            </DialogDescription>
-          </DialogHeader>
-          <Command>
-            <CommandInput
-              placeholder="Where would you like to go?"
-              aria-label="Search pages and projects"
-            />
-            <CommandList>
-              <CommandEmpty>
-                No matches. Try a project name or “about”.
-              </CommandEmpty>
-              <CommandGroup heading="Explore">
-                {nav.map(({ id, name, icon: Icon }) => (
-                  <CommandItem key={id} onSelect={() => navigate(id)}>
-                    <Icon />
-                    {name}
-                  </CommandItem>
-                ))}
-              </CommandGroup>
-              <CommandGroup heading="Projects">
-                {projects.map((project) => (
-                  <CommandItem
-                    key={project.id}
-                    onSelect={() => openProject(project)}
-                  >
-                    <Layers3 />
-                    {project.title}
-                  </CommandItem>
-                ))}
-              </CommandGroup>
-              <CommandGroup heading="Connect">
-                <CommandItem onSelect={openContact}>
-                  <Mail />
-                  Get in touch
-                </CommandItem>
-              </CommandGroup>
-            </CommandList>
-            <div className="command-hint">
-              <span>↑ ↓ to navigate · Enter to open</span>
-              <span>Esc to close</span>
+            <div className="social-links">
+              <a
+                href="https://github.com/ajaykareer"
+                aria-label="GitHub"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <GitFork />
+              </a>
+              <a
+                href="https://linkedin.com/in/ajaykareer"
+                aria-label="LinkedIn"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <span className="linkedin-mark">in</span>
+              </a>
+              <a href={`mailto:${email}`} aria-label="Email Ajay">
+                <Mail />
+              </a>
             </div>
-          </Command>
-        </DialogContent>
-      </Dialog>
-    </div>
+          </div>
+        </aside>
+        <div className="main-shell">
+          <header className="topbar">
+            <div>
+              <span className="breadcrumb-muted">Portfolio</span>
+              <span className="breadcrumb-slash">/</span>
+              {currentTitle}
+            </div>
+            <div className="top-actions">
+              <Button
+                variant="ghost"
+                className="command-button"
+                onClick={() => setCommandOpen(true)}
+                aria-label="Quick jump, Control or Command K"
+              >
+                <CommandIcon size={15} />
+                <span>Quick jump</span>
+                <kbd>Ctrl K</kbd>
+              </Button>
+              <span className="top-divider" />
+              <MotionToggle />
+              <Button
+                variant="ghost"
+                size="icon"
+                className="theme-button"
+                onClick={toggleTheme}
+                aria-label={`Switch to ${dark ? 'light' : 'dark'} theme`}
+                title={`Switch to ${dark ? 'light' : 'dark'} theme`}
+              >
+                {dark ? <Sun /> : <Moon />}
+              </Button>
+            </div>
+          </header>
+          <main id="main" className="content" tabIndex={-1}>
+            <PageTransition>
+              <MotionPage key={view} onEntered={pageEntered}>
+                {view === 'contact' && (
+                  <ContactPage dark={dark} headingRef={pageHeading} />
+                )}
+                {view === 'overview' && (
+                  <>
+                    <section className="intro">
+                      <Reveal className="intro-copy" distance={32}>
+                        <p className="eyebrow">
+                          <span className="small-spark" aria-hidden="true">
+                            ✳
+                          </span>{' '}
+                          HELLO, I’M AJAY
+                        </p>
+                        <h1 ref={pageHeading} tabIndex={-1}>
+                          Software meets
+                          <br />
+                          the <em>real world.</em>
+                        </h1>
+                        <p className="intro-description">
+                          I build iOS apps, business tools, and the systems
+                          behind them. Software & Hardware Engineer at{' '}
+                          <strong>CreativePOS.</strong>
+                        </p>
+                        <div className="hero-actions">
+                          <Button
+                            className="primary-action"
+                            onClick={() => navigate('projects')}
+                          >
+                            Explore my projects <ArrowUpRight />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            className="text-action"
+                            onClick={openContact}
+                          >
+                            Get in touch <ArrowRight size={16} />
+                          </Button>
+                        </div>
+                        <div className="location">
+                          <MapPin size={14} /> Ajax, Ontario <span>·</span>{' '}
+                          Always curious. Always building.
+                        </div>
+                      </Reveal>
+                      <Reveal
+                        className="portrait-wrap"
+                        delay={0.14}
+                        distance={48}
+                      >
+                        <div className="portrait-frame">
+                          <img
+                            src="/projects/ajay-linkedin.jpg"
+                            alt="Ajay Kareer"
+                            width="800"
+                            height="800"
+                          />
+                          <span className="portrait-caption">
+                            ENGINEER. DEVELOPER. BUILDER.
+                          </span>
+                        </div>
+                        <div className="portrait-sticker">
+                          <Smartphone />
+                          <span>
+                            Apps.
+                            <br />
+                            Systems.
+                            <br />
+                            Ideas.
+                          </span>
+                        </div>
+                        <span className="photo-mark" aria-hidden="true">
+                          ✳
+                        </span>
+                      </Reveal>
+                    </section>
+                    <Reveal delay={0.16}>
+                      <button
+                        className="current-role"
+                        onClick={() => navigate('experience')}
+                      >
+                        <span className="role-icon">
+                          <Cpu />
+                        </span>
+                        <span className="role-copy">
+                          <span className="eyebrow">WHERE I AM NOW</span>
+                          <span className="role-title">
+                            Software & Hardware Engineer{' '}
+                            <span>@ CreativePOS</span>
+                          </span>
+                        </span>
+                        <span className="role-date">JUN 2024 — PRESENT</span>
+                        <ArrowUpRight className="role-arrow" />
+                      </button>
+                    </Reveal>
+                    <section className="selected-work">
+                      <Reveal className="section-title">
+                        <div>
+                          <span className="eyebrow">
+                            iOS APPS, PLATFORMS & PRACTICAL TOOLS
+                          </span>
+                          <h2>
+                            Selected work
+                            <span>
+                              {' '}
+                              / {String(projects.length).padStart(2, '0')}
+                            </span>
+                          </h2>
+                        </div>
+                        <Button
+                          variant="ghost"
+                          onClick={() => navigate('projects')}
+                        >
+                          View all projects <ArrowRight size={16} />
+                        </Button>
+                      </Reveal>
+                      <div className="project-grid">
+                        {projects.slice(0, 4).map((project, index) => (
+                          <ProjectCard
+                            key={project.id}
+                            project={project}
+                            index={index}
+                            onOpen={openProject}
+                          />
+                        ))}
+                      </div>
+                    </section>
+                  </>
+                )}
+
+                {view === 'projects' && (
+                  <>
+                    <Reveal className="view-heading" distance={32}>
+                      <p className="eyebrow">SELECTED WORK / APPS & SYSTEMS</p>
+                      <h1 ref={pageHeading} tabIndex={-1}>
+                        Curiosity, <em>in practice.</em>
+                      </h1>
+                      <p>
+                        iOS products, Salesforce experiences, and tools built
+                        for real use.
+                      </p>
+                    </Reveal>
+                    <Reveal className="filter-bar" delay={0.12}>
+                      <div
+                        className="filter-buttons"
+                        aria-label="Filter projects"
+                      >
+                        {(
+                          [
+                            'All projects',
+                            'iOS apps',
+                            'Systems',
+                            'Salesforce',
+                            'Web apps',
+                          ] as Filter[]
+                        ).map((item) => (
+                          <Button
+                            variant="ghost"
+                            key={item}
+                            onClick={() => setFilter(item)}
+                            aria-pressed={filter === item}
+                            className={`filter-button ${filter === item ? 'is-active' : ''}`}
+                          >
+                            {item}
+                          </Button>
+                        ))}
+                      </div>
+                      <span className="results-count" role="status">
+                        {visibleProjects.length}{' '}
+                        {visibleProjects.length === 1 ? 'project' : 'projects'}
+                      </span>
+                    </Reveal>
+                    <div
+                      key={filter}
+                      className="project-grid full-project-grid"
+                    >
+                      {visibleProjects.map((project) => (
+                        <ProjectCard
+                          key={project.id}
+                          project={project}
+                          index={projects.indexOf(project)}
+                          onOpen={openProject}
+                        />
+                      ))}
+                    </div>
+                  </>
+                )}
+
+                {view === 'experience' && (
+                  <>
+                    <Reveal className="view-heading" distance={32}>
+                      <p className="eyebrow">THE JOURNEY SO FAR</p>
+                      <h1 ref={pageHeading} tabIndex={-1}>
+                        Code is only
+                        <br />
+                        <em>half the story.</em>
+                      </h1>
+                      <p>
+                        Working where software, hardware, and everyday use come
+                        together.
+                      </p>
+                    </Reveal>
+                    <Reveal
+                      as="section"
+                      className="experience-card"
+                      delay={0.12}
+                    >
+                      <div className="experience-top">
+                        <span className="large-icon">
+                          <Cpu />
+                        </span>
+                        <div>
+                          <span className="current-badge">CURRENT ROLE</span>
+                          <h2>CreativePOS</h2>
+                          <p>Software & Hardware Engineer</p>
+                        </div>
+                      </div>
+                      <div className="experience-date">
+                        <CalendarDays size={17} />
+                        <time dateTime="2024-06-01">June 1, 2024</time>
+                        <span>— Present</span>
+                      </div>
+                      <p className="experience-description">
+                        Since June 2024, I’ve been working as a Software &
+                        Hardware Engineer at CreativePOS. I built Creative POS
+                        Reporting to give our business partners access to sales
+                        reports and important POS notifications on their iPhone.
+                        My work connects the software people interact with and
+                        the hardware it runs on.
+                      </p>
+                      <div className="practice-grid">
+                        <div>
+                          <Code2 />
+                          <h3>Software</h3>
+                          <p>
+                            Thinking through how an application works, from its
+                            interface to the logic behind it.
+                          </p>
+                        </div>
+                        <div>
+                          <Monitor />
+                          <h3>Hardware</h3>
+                          <p>
+                            Bringing a hands-on engineering perspective to the
+                            devices behind the experience.
+                          </p>
+                        </div>
+                        <div>
+                          <Cpu />
+                          <h3>Point of sale</h3>
+                          <p>
+                            Working in the space where digital systems meet
+                            everyday business operations.
+                          </p>
+                        </div>
+                      </div>
+                    </Reveal>
+                    <CareerHistory />
+                    <Reveal as="section" className="related-work">
+                      <p className="eyebrow">FROM MY PERSONAL TOOLBOX</p>
+                      <h2>A practical systems project</h2>
+                      <button
+                        className="related-project"
+                        onClick={() =>
+                          openProject(
+                            projects.find(
+                              (project) =>
+                                project.id === 'windows-update-manager',
+                            )!,
+                          )
+                        }
+                      >
+                        <Terminal />
+                        <span>
+                          <strong>Windows Update Manager</strong>
+                          <span>
+                            A personal utility for Windows terminals, kiosks,
+                            and PCs.
+                          </span>
+                        </span>
+                        <ArrowUpRight />
+                      </button>
+                    </Reveal>
+                  </>
+                )}
+
+                {view === 'about' && (
+                  <>
+                    <Reveal className="view-heading" distance={32}>
+                      <p className="eyebrow">MORE THAN A JOB TITLE</p>
+                      <h1 ref={pageHeading} tabIndex={-1}>
+                        A builder.
+                        <br />A <em>curious mind.</em>
+                      </h1>
+                    </Reveal>
+                    <section className="about-grid">
+                      <Reveal className="about-photo" delay={0.1}>
+                        <img
+                          src="/projects/ajay-linkedin.jpg"
+                          alt="Ajay Kareer"
+                          width="800"
+                          height="800"
+                        />
+                        <span>AJAY KAREER / AJAX, ONTARIO</span>
+                      </Reveal>
+                      <Reveal className="about-copy" delay={0.2}>
+                        <h2>Hi, I’m Ajay.</h2>
+                        <p>
+                          I’m a software and hardware engineer based in Ajax,
+                          Ontario. My background spans business analysis,
+                          Salesforce, and web development. Today, I bring that
+                          perspective to iOS apps and point-of-sale systems at
+                          CreativePOS.
+                        </p>
+                        <p>
+                          I like the space between an idea and something you can
+                          actually use. Creative POS Reporting helps business
+                          partners stay close to their sales. Kareer’s Walls is
+                          my own take on a personal, easy-to-use wallpaper app.
+                          Word Shuffle and Windows Update Manager explore other
+                          sides of the same curiosity.
+                        </p>
+                        <p>
+                          I studied Web Design and Development at Humber College
+                          after completing a bachelor’s degree in Civil
+                          Engineering. That mix of analytical thinking and
+                          hands-on building still shapes how I approach a
+                          problem.
+                        </p>
+                        <Button
+                          className="primary-action"
+                          onClick={openContact}
+                        >
+                          Say hello <ArrowUpRight />
+                        </Button>
+                      </Reveal>
+                    </section>
+                    <ProfileBackground />
+                    <section className="toolbox">
+                      <Reveal className="section-title">
+                        <div>
+                          <p className="eyebrow">TOOLS I’VE WORKED WITH</p>
+                          <h2>Different tools. Same curiosity.</h2>
+                        </div>
+                        <Code2 />
+                      </Reveal>
+                      <div className="toolbox-grid">
+                        <Reveal>
+                          <h3>Web development</h3>
+                          <div className="tags">
+                            {[
+                              'JavaScript',
+                              'React',
+                              'HTML & CSS',
+                              'Tailwind CSS',
+                              'Bootstrap',
+                              'Firebase',
+                            ].map((item) => (
+                              <span key={item}>{item}</span>
+                            ))}
+                          </div>
+                        </Reveal>
+                        <Reveal delay={0.12}>
+                          <h3>Systems & platforms</h3>
+                          <div className="tags">
+                            {[
+                              'Windows Batch',
+                              'PowerShell',
+                              'Salesforce Aura',
+                              'Apex',
+                              'SOQL',
+                            ].map((item) => (
+                              <span key={item}>{item}</span>
+                            ))}
+                          </div>
+                        </Reveal>
+                      </div>
+                    </section>
+                  </>
+                )}
+              </MotionPage>
+            </PageTransition>
+            <footer className="page-footer">
+              <span>© {new Date().getFullYear()} Ajay Kareer</span>
+              <button onClick={openContact}>
+                Let’s make something useful.{' '}
+                <span className="orange" aria-hidden="true">
+                  ✳
+                </span>
+              </button>
+            </footer>
+          </main>
+        </div>
+
+        <Dialog
+          open={selected !== null}
+          onOpenChange={(open) => {
+            if (!open) setSelected(null);
+          }}
+        >
+          <DialogContent className="project-dialog">
+            {selected && (
+              <>
+                <DialogHeader>
+                  <p className="eyebrow">
+                    {selected.type} / {selected.year}
+                  </p>
+                  <DialogTitle className="dialog-title">
+                    {selected.title}
+                  </DialogTitle>
+                  <DialogDescription className="dialog-description">
+                    {selected.description}
+                  </DialogDescription>
+                </DialogHeader>
+                {selected.gallery ? (
+                  <div className="project-gallery">
+                    {selected.gallery.map((image) => (
+                      <figure key={image.file}>
+                        <img
+                          src={`/projects/${image.file}`}
+                          alt={image.label}
+                        />
+                        <figcaption>{image.label}</figcaption>
+                      </figure>
+                    ))}
+                  </div>
+                ) : selected.image ? (
+                  <div className={`dialog-image tone-${selected.tone}`}>
+                    <img
+                      src={`/projects/${selected.image}`}
+                      alt={`${selected.title} screenshot`}
+                    />
+                  </div>
+                ) : selected.category === 'iOS apps' ? (
+                  <div
+                    className={`project-visual detail-artwork tone-${selected.tone}`}
+                  >
+                    <ProjectArtwork project={selected} />
+                  </div>
+                ) : null}
+                {selected.role && (
+                  <dl className="project-facts">
+                    <div>
+                      <dt>MY ROLE</dt>
+                      <dd>{selected.role}</dd>
+                    </div>
+                    <div>
+                      <dt>BUILT FOR</dt>
+                      <dd>{selected.audience}</dd>
+                    </div>
+                    <div>
+                      <dt>STATUS</dt>
+                      <dd>{selected.status}</dd>
+                    </div>
+                  </dl>
+                )}
+                <p className="project-detail-text">{selected.details}</p>
+                <h3 className="detail-heading">What’s inside</h3>
+                <ul className="feature-list">
+                  {selected.features.map((feature) => (
+                    <li key={feature}>
+                      <Check />
+                      {feature}
+                    </li>
+                  ))}
+                </ul>
+                <div className="tags">
+                  {selected.stack.map((tag) => (
+                    <span key={tag}>{tag}</span>
+                  ))}
+                </div>
+                {selected.credit && (
+                  <p className="project-credit">{selected.credit}</p>
+                )}
+                <div className="dialog-actions">
+                  {selected.source && (
+                    <a
+                      className="external-action"
+                      href={selected.source}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <GitFork size={17} />
+                      View source
+                      <ArrowUpRight size={16} />
+                    </a>
+                  )}
+                  {selected.live && (
+                    <a
+                      className="external-action accent-action"
+                      href={selected.live}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Open live project
+                      <ArrowUpRight size={16} />
+                    </a>
+                  )}
+                  {selected.storeUrl && (
+                    <a
+                      className="external-action accent-action"
+                      href={selected.storeUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <Smartphone size={17} />
+                      View on the App Store
+                      <ArrowUpRight size={16} />
+                    </a>
+                  )}
+                  {!selected.source && !selected.storeUrl && (
+                    <Button
+                      className="primary-action"
+                      onClick={() => {
+                        setSelected(null);
+                        openContact();
+                      }}
+                    >
+                      Ask me about this project
+                      <ArrowUpRight size={16} />
+                    </Button>
+                  )}
+                </div>
+              </>
+            )}
+          </DialogContent>
+        </Dialog>
+        <Dialog open={commandOpen} onOpenChange={setCommandOpen}>
+          <DialogContent className="command-dialog">
+            <DialogHeader className="sr-only">
+              <DialogTitle>Quick jump</DialogTitle>
+              <DialogDescription>
+                Search pages and projects. Use the arrow keys and Enter to
+                choose.
+              </DialogDescription>
+            </DialogHeader>
+            <Command>
+              <CommandInput
+                placeholder="Where would you like to go?"
+                aria-label="Search pages and projects"
+              />
+              <CommandList>
+                <CommandEmpty>
+                  No matches. Try a project name or “about”.
+                </CommandEmpty>
+                <CommandGroup heading="Explore">
+                  {nav.map(({ id, name, icon: Icon }) => (
+                    <CommandItem key={id} onSelect={() => navigate(id)}>
+                      <Icon />
+                      {name}
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
+                <CommandGroup heading="Projects">
+                  {projects.map((project) => (
+                    <CommandItem
+                      key={project.id}
+                      onSelect={() => openProject(project)}
+                    >
+                      <Layers3 />
+                      {project.title}
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
+                <CommandGroup heading="Connect">
+                  <CommandItem onSelect={openContact}>
+                    <Mail />
+                    Get in touch
+                  </CommandItem>
+                </CommandGroup>
+              </CommandList>
+              <div className="command-hint">
+                <span>↑ ↓ to navigate · Enter to open</span>
+                <span>Esc to close</span>
+              </div>
+            </Command>
+          </DialogContent>
+        </Dialog>
+      </div>
+    </MotionProvider>
   );
 }

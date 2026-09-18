@@ -539,10 +539,10 @@
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .globe-canvas {
+  html:not([data-motion='full']) .globe-canvas {
     transition: none;
   }
-  .send-spinner {
+  html:not([data-motion='full']) .send-spinner {
     animation: none;
   }
 }
