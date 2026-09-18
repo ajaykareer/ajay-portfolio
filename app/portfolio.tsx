@@ -27,6 +27,7 @@ import {
 import { PremiumCursor } from './premium-cursor';
 import { ProfileBackground, CareerHistory } from './profile-background';
 import { ContactPage } from './contact-page';
+import { MotionPage, ScrollProgress } from './page-motion';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -444,6 +445,7 @@ export default function Portfolio() {
   return (
     <div className="portfolio-app">
       <PremiumCursor />
+      <ScrollProgress />
       <a className="skip-link" href="#main">
         Skip to content
       </a>
@@ -538,7 +540,7 @@ export default function Portfolio() {
           </div>
         </header>
         <main id="main" className="content" tabIndex={-1}>
-          <div className="page-view" key={view}>
+          <MotionPage key={view}>
             {view === 'contact' && (
               <ContactPage dark={dark} headingRef={pageHeading} />
             )}
@@ -895,7 +897,7 @@ export default function Portfolio() {
                 </section>
               </>
             )}
-          </div>
+          </MotionPage>
           <footer className="page-footer">
             <span>© {new Date().getFullYear()} Ajay Kareer</span>
             <button onClick={openContact}>

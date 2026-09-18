@@ -1,0 +1,169 @@
+/* Content is visible by default. Only an active observer can queue a reveal. */
+.page-view {
+  animation: none;
+}
+.page-view [data-reveal-pending] {
+  opacity: 0;
+}
+.page-view [data-reveal-running] {
+  will-change: transform, opacity;
+}
+.page-view [data-reveal-pending]:focus-within {
+  opacity: 1;
+}
+
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 238px;
+  right: 0;
+  height: 3px;
+  z-index: 35;
+  pointer-events: none;
+}
+.scroll-progress[hidden] {
+  display: none;
+}
+.scroll-progress > span {
+  display: block;
+  height: 100%;
+  width: 100%;
+  background: var(--primary);
+  transform: scaleX(0);
+  transform-origin: left;
+  box-shadow: 0 1px 8px #ff694725;
+}
+
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .project-visual {
+    transform: perspective(1000px) rotateX(var(--tilt-x, 0deg))
+      rotateY(var(--tilt-y, 0deg));
+    transition:
+      transform 420ms cubic-bezier(0.16, 1, 0.3, 1),
+      box-shadow 420ms,
+      border-color 300ms;
+    transform-origin: 50% 55%;
+  }
+  .project-visual[data-tilt-active] {
+    transform: perspective(1000px) rotateX(var(--tilt-x, 0deg))
+      rotateY(var(--tilt-y, 0deg)) translateY(-5px);
+    transition-duration: 160ms, 420ms, 300ms;
+    box-shadow: 0 22px 40px -24px #17213065;
+    border-color: color-mix(in srgb, var(--primary) 30%, var(--border));
+  }
+  .project-visual::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    z-index: 1;
+    background: radial-gradient(
+      ellipse at var(--spot-x, 50%) var(--spot-y, 50%),
+      #ffffff30,
+      transparent 62%
+    );
+    opacity: 0;
+    transition: opacity 400ms;
+  }
+  .project-visual[data-tilt-active]::after {
+    opacity: 1;
+  }
+  .dark .project-visual[data-tilt-active] {
+    box-shadow: 0 24px 40px -24px #000b;
+  }
+  .project-heading h3 {
+    transition: color 250ms;
+  }
+  .project-card-button:hover h3 {
+    color: color-mix(in srgb, var(--foreground) 70%, var(--primary));
+  }
+  .portrait-frame {
+    translate: 0 var(--portrait-drift, 0px);
+  }
+  .portrait-sticker {
+    translate: 0 calc(var(--portrait-drift, 0px) * -0.65);
+  }
+  .primary-action,
+  .contact-submit,
+  .text-action,
+  .external-action {
+    transition:
+      translate 220ms cubic-bezier(0.16, 1, 0.3, 1),
+      box-shadow 220ms,
+      background 220ms;
+  }
+  .primary-action:hover,
+  .contact-submit:hover,
+  .text-action:hover,
+  .external-action:hover {
+    translate: 0 -2px;
+  }
+  .primary-action:hover,
+  .contact-submit:hover {
+    box-shadow: 0 10px 20px -12px #f46445a0;
+  }
+  .primary-action:active,
+  .contact-submit:active,
+  .text-action:active,
+  .external-action:active {
+    translate: 0 0;
+  }
+  .education-grid article,
+  .credentials-grid article,
+  .toolbox-grid > div {
+    transition:
+      border-color 280ms,
+      box-shadow 280ms;
+  }
+  .education-grid article:hover,
+  .credentials-grid article:hover,
+  .toolbox-grid > div:hover {
+    border-color: color-mix(in srgb, var(--primary) 35%, var(--border));
+    box-shadow: 0 12px 30px -24px #352a2560;
+  }
+}
+@media (max-width: 1100px) {
+  .scroll-progress {
+    left: 210px;
+  }
+}
+@media (max-width: 800px) {
+  .scroll-progress {
+    left: 76px;
+  }
+}
+@media (max-width: 600px) {
+  .scroll-progress {
+    left: 0;
+    height: 2px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .page-view [data-reveal-pending],
+  .page-view [data-reveal-running] {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+    clip-path: none !important;
+  }
+  .portrait-frame,
+  .portrait-sticker {
+    translate: none !important;
+  }
+  .scroll-progress {
+    display: none;
+  }
+}
+@media print {
+  .page-view [data-reveal-pending],
+  .page-view [data-reveal-running] {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+    clip-path: none !important;
+  }
+  .scroll-progress {
+    display: none;
+  }
+}

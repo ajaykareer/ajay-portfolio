@@ -29,6 +29,7 @@ npx --yes --package=node@22.22.0 node node_modules/vinext/dist/cli.js build
 - `app/globals.css`: colors, typography, layout, animations, and responsive styles.
 - `app/premium.css`: refined buttons, app artwork, profile layout, and cursor styling.
 - `app/premium-cursor.tsx`: desktop cursor with native fallbacks for touch and reduced motion.
+- `app/page-motion.tsx` and `app/motion.css`: scroll-triggered entrances, staggered cards, pointer-responsive depth, subtle portrait movement, and a page scroll indicator. Native browser animation APIs keep this independent of extra animation libraries.
 - `app/profile-background.tsx`: education, certifications, and earlier employment.
 - `app/contact-page.tsx` and `app/contact.css`: dedicated Contact view, form feedback, and responsive layout.
 - `app/contact-orbit.tsx`: lazy-loaded COBE globe, moving starfield, drag/keyboard controls, and reduced-motion handling.
@@ -48,8 +49,12 @@ The Contact page sends name, email, and message through Ajay's EmailJS Contact U
 
 The EmailJS account must have an active email service and template. If it uses an origin allowlist, include `https://ajay-kareer-portfolio.goli15.chatgpt.site`, `https://ajaykareer.com`, and the local development origin as needed. The supplied Contact Us template uses `name`, `email`, `message`, `title`, `date`, and `time`. Configure To Email as the chosen fixed inbox and Reply To as `{{email}}`. Browser identifiers are designed to be public; never add an EmailJS private key to this client file. `docs/emailjs-template.html` is an optional portfolio-branded email body to replace the existing template's “The Sarcastic Tales” branding without changing its fields.
 
-The form validates fields, blocks accidental duplicate submissions, includes a honeypot, and waits for EmailJS's positive response before showing success. These browser checks do not replace provider-side spam controls. Delivery and account status need a real inbox test; implementation checks use mocked requests and send no messages. Run the contact checks with `node --experimental-strip-types --test tests/contact.test.mjs` on Node 22.22.0 or newer.
+The form validates fields, blocks accidental duplicate submissions, includes a honeypot, and waits for EmailJS's positive response before showing success. These browser checks do not replace provider-side spam controls. Ajay confirmed successful inbox delivery with a received test message on September 17, 2026. Implementation checks use mocked requests and send no messages. Run the contact checks with `node --experimental-strip-types --test tests/contact.test.mjs` on Node 22.22.0 or newer.
 
 The animated globe and stars run only in the Contact view, pause when hidden/offscreen, and stop automatically for reduced-motion preferences. WebGL is optional: the form remains available if the globe cannot render.
+
+## Motion behavior
+
+Content starts visible before JavaScript. An IntersectionObserver progressively enhances each view with one-time entrances; newly filtered project cards are observed too. Entrances stop on keyboard focus, when reduced motion is requested, and before printing. Pointer tilt and portrait depth apply only to fine-pointer devices without reduced motion. Scrolling stays native. Observers, animation frames, and event listeners are cleaned up when changing views.
 
 Keep this folder backed up or push it to your own Git repository to retain the complete source.

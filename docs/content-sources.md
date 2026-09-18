@@ -7,7 +7,7 @@ Updated September 17, 2026.
 - **Certifications:** https://www.linkedin.com/in/ajaykareer/details/certifications/ — four Salesforce credentials and issue dates. These are presented as certifications earned, without making a claim about current maintenance status.
 - **Creative POS Reporting:** https://apps.apple.com/ng/app/creative-pos-reporting/id6799240504 — app name, public screenshots, icon, platform, and published features. Version 1.1 release notes confirm biometric Quick Login and Keychain-backed credentials. Assets were retrieved through Apple's public lookup endpoint.
 - **Existing projects:** https://github.com/ajaykareer and https://ajaykareer.com — existing repository links and recovered web project screenshots. Existing fork attribution is retained.
-- **Contact delivery:** Ajay supplied the EmailJS service/template IDs, browser public key, and screenshots of the Contact Us template. Its fixed receiving inbox is kareer07@gmail.com. The new form matches its name, email, message, title, date, and time fields. Actual account connectivity and inbox delivery have not been verified by an outbound test.
+- **Contact delivery:** Ajay supplied the EmailJS service/template IDs, browser public key, and screenshots of the Contact Us template. Its fixed receiving inbox is kareer07@gmail.com. The new form matches its name, email, message, title, date, and time fields. Ajay confirmed successful inbox delivery and shared the received test message on September 17, 2026.
 - **Interactive globe:** COBE 2.0.1, https://cobe.vercel.app/ — geographic globe renderer. The Ontario marker represents Ajay's stated location; no customer or traffic data is implied. The animated starfield is decorative.
 
 ## Follow-up content
