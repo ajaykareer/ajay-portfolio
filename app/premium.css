@@ -426,60 +426,51 @@
 .dark .project-gallery figcaption {
   color: #c6d6ec;
 }
-.premium-cursor {
-  position: fixed;
-  left: 0;
-  top: 0;
-  width: 0;
-  height: 0;
-  z-index: 2147483647;
-  pointer-events: none;
-  opacity: 0;
-  will-change: transform;
-}
-.premium-cursor[data-visible='true'] {
-  opacity: 1;
-}
-.cursor-ring,
-.cursor-dot {
-  position: absolute;
-  left: 0;
-  top: 0;
-  pointer-events: none;
-  transform: translate(-50%, -50%);
-  border-radius: 50%;
-}
-.cursor-ring {
-  width: 30px;
-  height: 30px;
-  border: 1px solid #fa704fd0;
-  background: #ff694707;
-  transition:
-    width 0.16s,
-    height 0.16s,
-    background 0.16s;
-}
-.cursor-dot {
-  width: 5px;
-  height: 5px;
-  background: #ef5a36;
-  box-shadow: 0 0 0 1px #fff9;
-}
-.premium-cursor[data-interactive='true'] .cursor-ring {
-  width: 43px;
-  height: 43px;
-  background: #ff694719;
-  border-color: #f26443;
-}
-@media (hover: hover) and (pointer: fine) {
-  html.has-custom-cursor,
-  html.has-custom-cursor * {
-    cursor: none !important;
+/* Browser-native artwork stays responsive without a pointermove animation loop. */
+@media (any-hover: hover) and (any-pointer: fine) {
+  body,
+  .portfolio-app,
+  .page-view,
+  .page-view p,
+  .page-view h1,
+  .page-view h2,
+  .page-view h3,
+  .page-view img {
+    cursor:
+      url('/cursor.svg') 16 16,
+      auto;
   }
-  html.has-custom-cursor input,
-  html.has-custom-cursor textarea,
-  html.has-custom-cursor [contenteditable='true'] {
-    cursor: text !important;
+  a,
+  button,
+  [role='button'],
+  [role='option'],
+  a *,
+  button *,
+  [role='button'] *,
+  [role='option'] * {
+    cursor:
+      url('/cursor-link.svg') 16 16,
+      pointer;
+  }
+  input,
+  textarea,
+  [contenteditable='true'] {
+    cursor: text;
+  }
+  select {
+    cursor: pointer;
+  }
+  button:disabled,
+  [aria-disabled='true'] {
+    cursor: not-allowed;
+  }
+  .globe-stage,
+  .globe-stage * {
+    cursor: grab;
+  }
+  .globe-stage:active,
+  .globe-stage:active * {
+    cursor: grabbing;
   }
 }
 @media (min-width: 1550px) {

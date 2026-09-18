@@ -1,4 +1,5 @@
 'use client';
+/* oxlint-disable jsx-a11y/no-noninteractive-element-interactions, jsx-a11y/no-noninteractive-tabindex, jsx-a11y/prefer-tag-over-role -- The labelled canvas group is a custom drag/arrow-key widget, with equivalent native buttons directly below it. */
 
 import { useEffect, useRef, useState } from 'react';
 import type { Globe } from 'cobe';
@@ -48,6 +49,7 @@ export function ContactOrbit({ dark }: { dark: boolean }) {
     let globe: Globe | undefined;
     let frame = 0;
     let lastFrame = 0;
+    let lastPaint = 0;
     let elapsed = 0;
     let visible = true;
     let contextAvailable = true;
@@ -102,14 +104,16 @@ export function ContactOrbit({ dark }: { dark: boolean }) {
     const animate = (time: number) => {
       frame = 0;
       if (!canAnimate()) return;
-      if (!lastFrame) lastFrame = time;
+      if (!lastFrame) lastFrame = lastPaint = time;
       const delta = time - lastFrame;
       if (delta >= 1000 / 30) {
-        const seconds = Math.min(delta / 1000, 0.06);
+        const seconds = Math.min((time - lastPaint) / 1000, 0.06);
         elapsed += seconds;
         if (!pointer.current) orientation.current.phi += seconds * 0.13;
         paint();
-        lastFrame = time;
+        // Carry the remainder so a 60 Hz display keeps an even 30 fps cadence.
+        lastFrame = time - (delta % (1000 / 30));
+        lastPaint = time;
       }
       frame = requestAnimationFrame(animate);
     };
@@ -117,6 +121,7 @@ export function ContactOrbit({ dark }: { dark: boolean }) {
       cancelAnimationFrame(frame);
       frame = 0;
       lastFrame = 0;
+      lastPaint = 0;
       paint();
       if (canAnimate()) frame = requestAnimationFrame(animate);
     };
@@ -124,7 +129,7 @@ export function ContactOrbit({ dark }: { dark: boolean }) {
     const resize = () => {
       width = host.clientWidth;
       height = host.clientHeight;
-      ratio = Math.min(window.devicePixelRatio || 1, 1.75);
+      ratio = Math.min(window.devicePixelRatio || 1, 1.5);
       starCanvas.width = Math.round(width * ratio);
       starCanvas.height = Math.round(height * ratio);
       ctx?.setTransform(ratio, 0, 0, ratio, 0, 0);

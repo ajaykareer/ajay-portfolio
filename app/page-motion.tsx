@@ -3,7 +3,9 @@
 import {
   createContext,
   useContext,
-  useEffect,
+  useCallback,
+  useMemo,
+  useSyncExternalStore,
   useLayoutEffect,
   useState,
   type ReactNode,
@@ -22,44 +24,61 @@ import * as m from 'motion/react-m';
 const ease = [0.22, 0.68, 0, 1] as const;
 const MotionPreference = createContext({ reduced: false, toggle: () => {} });
 const preferenceKey = 'ajay-portfolio-motion';
+const preferenceEvent = 'portfolio-motion-change';
+let unavailableStoragePreference: 'full' | 'reduced' | null = null;
+const revealElements = { div: m.div, article: m.article, section: m.section };
+
+function readMotionPreference(): 'full' | 'reduced' | 'system' {
+  try {
+    const saved = localStorage.getItem(preferenceKey);
+    if (saved === 'full' || saved === 'reduced') return saved;
+  } catch {
+    if (unavailableStoragePreference) return unavailableStoragePreference;
+  }
+  return window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    ? 'reduced'
+    : 'full';
+}
+
+function subscribeMotionPreference(onChange: () => void) {
+  const media = window.matchMedia('(prefers-reduced-motion: reduce)');
+  media.addEventListener('change', onChange);
+  window.addEventListener('storage', onChange);
+  window.addEventListener(preferenceEvent, onChange);
+  return () => {
+    media.removeEventListener('change', onChange);
+    window.removeEventListener('storage', onChange);
+    window.removeEventListener(preferenceEvent, onChange);
+  };
+}
 
 export const usePortfolioMotion = () => useContext(MotionPreference);
 
 export function MotionProvider({ children }: { children: ReactNode }) {
-  const [preference, setPreference] = useState<'full' | 'reduced' | null>(null);
-  const [systemReduced, setSystemReduced] = useState(false);
-  const reduced = preference ? preference === 'reduced' : systemReduced;
-
-  useEffect(() => {
-    const media = window.matchMedia('(prefers-reduced-motion: reduce)');
-    const sync = () => setSystemReduced(media.matches);
-    sync();
-    media.addEventListener('change', sync);
-    try {
-      const saved = localStorage.getItem(preferenceKey);
-      if (saved === 'full' || saved === 'reduced') setPreference(saved);
-    } catch {
-      /* Storage can be disabled; the switch still works for this visit. */
-    }
-    return () => media.removeEventListener('change', sync);
-  }, []);
+  const preference = useSyncExternalStore(
+    subscribeMotionPreference,
+    readMotionPreference,
+    () => 'system',
+  );
+  const reduced = preference === 'reduced';
 
   useLayoutEffect(() => {
-    document.documentElement.dataset.motion = preference ?? 'system';
+    document.documentElement.dataset.motion = preference;
   }, [preference]);
 
-  const toggle = () => {
+  const toggle = useCallback(() => {
     const next = reduced ? 'full' : 'reduced';
-    setPreference(next);
     try {
       localStorage.setItem(preferenceKey, next);
     } catch {
-      /* Optional preference persistence. */
+      unavailableStoragePreference = next;
     }
-  };
+    window.dispatchEvent(new Event(preferenceEvent));
+  }, [reduced]);
+  const settings = useMemo(() => ({ reduced, toggle }), [reduced, toggle]);
 
   return (
-    <MotionPreference.Provider value={{ reduced, toggle }}>
+    <MotionPreference.Provider value={settings}>
       <LazyMotion features={domAnimation} strict>
         <MotionConfig reducedMotion={reduced ? 'always' : 'never'}>
           {children}
@@ -158,7 +177,7 @@ export function Reveal({
 }) {
   const { reduced } = usePortfolioMotion();
   const [focused, setFocused] = useState(false);
-  const Tag = m[as];
+  const Tag = revealElements[as];
   return (
     <Tag
       className={className}

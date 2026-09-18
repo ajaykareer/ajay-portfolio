@@ -15,9 +15,10 @@ npm run dev
 
 ```sh
 npm run build
+npm run preview
 ```
 
-The static website is written to `dist/client` and can also be hosted by any static website host. On Windows with Node 24 installed, the verified build command is:
+The static website is written to `dist/client` and can also be hosted by any static website host. The production preview runs at `http://localhost:4173`. On Windows with Node 24 installed, the verified build command is:
 
 ```sh
 npx --yes --package=node@22.22.0 node node_modules/vinext/dist/cli.js build
@@ -28,7 +29,7 @@ npx --yes --package=node@22.22.0 node node_modules/vinext/dist/cli.js build
 - `app/portfolio.tsx`: project data, contact details, biography, experience, and interactions.
 - `app/globals.css`: colors, typography, layout, animations, and responsive styles.
 - `app/premium.css`: refined buttons, app artwork, profile layout, and cursor styling.
-- `app/premium-cursor.tsx`: desktop cursor with native fallbacks for touch and reduced motion.
+- `public/cursor.svg`, `public/cursor-link.svg`, and `app/premium.css`: browser-native custom cursors, with standard text, drag, and disabled states. They work independently of Motion preferences and need no mouse-move JavaScript.
 - `app/page-motion.tsx` and `app/motion.css`: Motion-powered page transitions, staggered scroll entrances, a persistent motion preference, and a native CSS scroll progress indicator.
 - `app/profile-background.tsx`: education, certifications, and earlier employment.
 - `app/contact-page.tsx` and `app/contact.css`: dedicated Contact view, form feedback, and responsive layout.
@@ -57,6 +58,10 @@ The animated globe and stars run only in the Contact view, pause when hidden/off
 
 Motion (the `motion` package) handles page exit/entry and one-time viewport reveals. Pages fade out before the next view mounts; cards rise in with a short stagger. Only opacity and transforms animate. Scroll stays native, with no JavaScript scroll handler, portrait parallax, animated blur, or pointer-driven card lighting. The progress line uses CSS scroll timelines where supported. Print and no-JavaScript styles keep content visible.
 
-The Motion switch beside the theme button follows the device’s reduced-motion preference by default. Visitors can explicitly enable or reduce motion for this site; their choice is saved locally. The same preference controls entrances, the cursor, globe, and stars. Keyboard focus reveals interactive items immediately. Navigation moves focus to the new heading after its page entrance finishes.
+The Motion switch beside the theme button follows the device’s reduced-motion preference by default. Visitors can explicitly enable or reduce motion for this site; their choice is saved locally per origin. The same preference controls entrances, the globe, and stars. The static custom cursor remains available on desktop even with motion reduced. Keyboard focus reveals interactive items immediately. Navigation moves focus to the new heading after its page entrance finishes.
+
+Portrait and large project screenshots use responsive WebP variants; originals remain available for editing. Regenerate variants with `node scripts/optimize-images.mjs`, which uses the pinned Sharp development dependency. Tailwind scans the app and the seven UI primitives it uses; when adding a new UI primitive, add its source to `app/globals.css`.
+
+See `docs/qa-report.md` for the website checks and measured asset reductions. For local diagnostics only, `npm run preview -- --audit` enables console performance samples at `http://localhost:4173/?audit=1`; it sends no data and is not part of the hosted build. Browser automation can distort frame timings, so these samples are not a performance score.
 
 Keep this folder backed up or push it to your own Git repository to retain the complete source.

@@ -1,4 +1,5 @@
 'use client';
+/* oxlint-disable next/no-img-element -- Static export uses precompressed responsive images; no runtime image service is needed. */
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import {
@@ -24,7 +25,6 @@ import {
   Smartphone,
   Wallpaper,
 } from 'lucide-react';
-import { PremiumCursor } from './premium-cursor';
 import { ProfileBackground, CareerHistory } from './profile-background';
 import { ContactPage } from './contact-page';
 import {
@@ -66,6 +66,7 @@ type Project = {
   type: string;
   year: string;
   image?: string;
+  imageSmall?: string;
   tone: string;
   description: string;
   details: string;
@@ -174,7 +175,8 @@ const projects: Project[] = [
     category: 'Web apps',
     type: 'WEB APPLICATION',
     year: '2023',
-    image: 'weather-69c3ec64.jpg',
+    image: 'weather-69c3ec64-1280.webp',
+    imageSmall: 'weather-69c3ec64-640.webp',
     tone: 'weather',
     description:
       'A simple way to check the weather in cities around the world.',
@@ -215,7 +217,8 @@ const projects: Project[] = [
     category: 'Web apps',
     type: 'PHOTO GALLERY',
     year: '2023',
-    image: 'akk-9a32c0fd.jpg',
+    image: 'akk-9a32c0fd-1280.webp',
+    imageSmall: 'akk-9a32c0fd-640.webp',
     tone: 'gallery',
     description:
       'A photo gallery with account registration, built with React and Firebase.',
@@ -238,7 +241,8 @@ const projects: Project[] = [
     category: 'Web apps',
     type: 'SPORTS INTERFACE',
     year: '2023',
-    image: 'davosbet-2ba74307.jpg',
+    image: 'davosbet-2ba74307-1280.webp',
+    imageSmall: 'davosbet-2ba74307-640.webp',
     tone: 'sports',
     description:
       'A sports interface exploring live scores, standings, and sports data.',
@@ -323,8 +327,15 @@ function ProjectArtwork({ project }: { project: Project }) {
     return (
       <img
         src={`/projects/${project.image}`}
+        srcSet={
+          project.imageSmall
+            ? `/projects/${project.imageSmall} 640w, /projects/${project.image} 1280w`
+            : undefined
+        }
+        sizes="(max-width: 600px) calc(100vw - 44px), (max-width: 1100px) 45vw, 680px"
         alt={`${project.title} interface`}
         loading="lazy"
+        decoding="async"
         width="1000"
         height="600"
       />
@@ -398,6 +409,7 @@ export default function Portfolio() {
   const [commandOpen, setCommandOpen] = useState(false);
   const [dark, setDark] = useState(false);
   const pageHeading = useRef<HTMLHeadingElement>(null);
+  const projectDialogHeading = useRef<HTMLHeadingElement>(null);
   const didMount = useRef(false);
 
   useEffect(() => {
@@ -456,9 +468,15 @@ export default function Portfolio() {
   return (
     <MotionProvider>
       <div className="portfolio-app">
-        <PremiumCursor />
         <ScrollProgress />
-        <a className="skip-link" href="#main">
+        <a
+          className="skip-link"
+          href="#main"
+          onClick={(event) => {
+            event.preventDefault();
+            document.getElementById('main')?.focus();
+          }}
+        >
           Skip to content
         </a>
         <aside className="sidebar">
@@ -605,7 +623,11 @@ export default function Portfolio() {
                       >
                         <div className="portrait-frame">
                           <img
-                            src="/projects/ajay-linkedin.jpg"
+                            src="/projects/ajay-linkedin-800.webp"
+                            srcSet="/projects/ajay-linkedin-400.webp 400w, /projects/ajay-linkedin-800.webp 800w"
+                            sizes="(max-width: 600px) 75vw, 360px"
+                            fetchPriority="high"
+                            decoding="async"
                             alt="Ajay Kareer"
                             width="800"
                             height="800"
@@ -720,10 +742,10 @@ export default function Portfolio() {
                           </Button>
                         ))}
                       </div>
-                      <span className="results-count" role="status">
+                      <output className="results-count">
                         {visibleProjects.length}{' '}
                         {visibleProjects.length === 1 ? 'project' : 'projects'}
-                      </span>
+                      </output>
                     </Reveal>
                     <div
                       key={filter}
@@ -851,7 +873,10 @@ export default function Portfolio() {
                     <section className="about-grid">
                       <Reveal className="about-photo" delay={0.1}>
                         <img
-                          src="/projects/ajay-linkedin.jpg"
+                          src="/projects/ajay-linkedin-800.webp"
+                          srcSet="/projects/ajay-linkedin-400.webp 400w, /projects/ajay-linkedin-800.webp 800w"
+                          sizes="(max-width: 600px) calc(100vw - 44px), 460px"
+                          decoding="async"
                           alt="Ajay Kareer"
                           width="800"
                           height="800"
@@ -953,14 +978,14 @@ export default function Portfolio() {
             if (!open) setSelected(null);
           }}
         >
-          <DialogContent className="project-dialog">
+          <DialogContent className="project-dialog" initialFocus={projectDialogHeading}>
             {selected && (
               <>
                 <DialogHeader>
                   <p className="eyebrow">
                     {selected.type} / {selected.year}
                   </p>
-                  <DialogTitle className="dialog-title">
+                  <DialogTitle className="dialog-title" ref={projectDialogHeading} tabIndex={-1}>
                     {selected.title}
                   </DialogTitle>
                   <DialogDescription className="dialog-description">
@@ -974,6 +999,8 @@ export default function Portfolio() {
                         <img
                           src={`/projects/${image.file}`}
                           alt={image.label}
+                          loading="lazy"
+                          decoding="async"
                         />
                         <figcaption>{image.label}</figcaption>
                       </figure>
@@ -984,6 +1011,7 @@ export default function Portfolio() {
                     <img
                       src={`/projects/${selected.image}`}
                       alt={`${selected.title} screenshot`}
+                      decoding="async"
                     />
                   </div>
                 ) : selected.category === 'iOS apps' ? (

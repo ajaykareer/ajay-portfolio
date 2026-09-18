@@ -4,7 +4,7 @@ import {
   useEffect,
   useRef,
   useState,
-  type FormEvent,
+  type SubmitEvent,
   type RefObject,
 } from 'react';
 import {
@@ -68,7 +68,7 @@ export function ContactPage({
     setDraft((current) => ({ ...current, [field]: value }));
     setErrors((current) => ({ ...current, [field]: undefined }));
   };
-  const submit = async (event: FormEvent<HTMLFormElement>) => {
+  const submit = async (event: SubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (inFlight.current) return;
     const form = event.currentTarget;
@@ -157,7 +157,8 @@ export function ContactPage({
               className="contact-success"
               ref={statusRef}
               tabIndex={-1}
-              role="status"
+              aria-live="polite"
+              aria-atomic="true"
             >
               <span className="success-icon">
                 <CheckCheck size={30} />
@@ -295,17 +296,6 @@ export function ContactPage({
                   </>
                 )}
               </Button>
-              <p className="contact-privacy">
-                Your name, email and message are sent to me through{' '}
-                <a
-                  href="https://www.emailjs.com/legal/privacy-policy/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  EmailJS
-                </a>
-                , so I can reply.
-              </p>
             </form>
           )}
           <div
@@ -331,9 +321,9 @@ export function ContactPage({
                 {copied ? <Check /> : <Copy />}
               </Button>
             </div>
-            <span className="sr-only" role="status">
+            <output className="sr-only">
               {copied ? 'Email address copied.' : ''}
-            </span>
+            </output>
           </div>
         </div>
         <ContactOrbit dark={dark} />

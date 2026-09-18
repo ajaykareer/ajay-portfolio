@@ -132,16 +132,6 @@
 .contact-submit:hover svg:not(.send-spinner) {
   transform: translate(2px, -2px);
 }
-.contact-privacy {
-  font-size: 11px;
-  line-height: 1.65;
-  color: var(--muted-foreground);
-  margin: -11px 0 0;
-}
-.contact-privacy a {
-  text-decoration: underline;
-  text-underline-offset: 3px;
-}
 .contact-trap {
   position: absolute;
   width: 1px;
