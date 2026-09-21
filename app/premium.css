@@ -1,4 +1,143 @@
 /* Product-focused refinements; shared colors still come from globals.css. */
+/* Light studio surface: bounded, static decoration with no scroll or pointer work. */
+html:not(.dark) .main-shell {
+  position: relative;
+  isolation: isolate;
+}
+html:not(.dark) .main-shell::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: 76px 0 auto;
+  height: 620px;
+  pointer-events: none;
+  background:
+    linear-gradient(to bottom, transparent 12%, var(--background) 93%),
+    radial-gradient(ellipse at 88% 5%, #ffd6bc85, transparent 54%),
+    linear-gradient(#25344409 1px, transparent 1px),
+    linear-gradient(90deg, #25344409 1px, transparent 1px);
+  background-size: auto, auto, 48px 48px, 48px 48px;
+}
+html:not(.dark) .topbar {
+  background: #fffdfb;
+}
+html:not(.dark) :is(.view-heading, .contact-heading) {
+  position: relative;
+}
+html:not(.dark) .view-heading > .eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 12px;
+}
+html:not(.dark) .view-heading > .eyebrow::before {
+  content: '';
+  width: 30px;
+  height: 2px;
+  flex: 0 0 auto;
+  background: var(--primary);
+}
+html:not(.dark) h1 em {
+  color: #d64c2e;
+}
+html:not(.dark) .filter-bar {
+  padding: 10px 14px 10px 10px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--card);
+  box-shadow: var(--surface-shadow);
+}
+html:not(.dark) .filter-button {
+  border-color: transparent;
+}
+html:not(.dark) .filter-button.is-active {
+  background: #292d30 !important;
+  color: #fff !important;
+  box-shadow: 0 2px 4px #24282d20;
+}
+html:not(.dark) .project-card {
+  display: flex;
+  flex-direction: column;
+  padding: 10px 10px 22px;
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  background: var(--card);
+  box-shadow: var(--surface-shadow);
+}
+html:not(.dark) .project-card:focus-within {
+  border-color: var(--primary);
+}
+html:not(.dark) .project-card .project-visual {
+  border-radius: 13px;
+}
+html:not(.dark) .project-heading {
+  margin: 22px 14px 0;
+  gap: 12px;
+}
+html:not(.dark) .project-heading .eyebrow {
+  font-size: 12px;
+  letter-spacing: 0.065em;
+}
+html:not(.dark) .project-description {
+  font-size: 16px;
+  margin: 12px 14px 18px;
+}
+html:not(.dark) .project-card > .tags {
+  margin: auto 14px 0;
+  padding-top: 14px;
+  border-top: 1px solid #eeedea;
+}
+html:not(.dark) .project-card .tags span {
+  background: #f5f4f1;
+  border-color: transparent;
+  padding: 5px 9px;
+  border-radius: 6px;
+  font-size: 12px;
+}
+html:not(.dark) :is(.current-role, .experience-card, .contact-studio) {
+  box-shadow: var(--surface-shadow);
+}
+html:not(.dark) .current-role {
+  border-left: 3px solid var(--primary);
+}
+@media (hover: hover) and (pointer: fine) {
+  html:not(.dark) .project-card:hover {
+    border-color: #c4c5c4;
+  }
+}
+@media (max-width: 800px) {
+  html:not(.dark) .main-shell::before {
+    top: 64px;
+  }
+}
+@media (max-width: 600px) {
+  html:not(.dark) .main-shell::before {
+    top: 60px;
+    height: 510px;
+    background-size: auto, auto, 36px 36px, 36px 36px;
+  }
+  html:not(.dark) .project-card {
+    padding: 8px 8px 20px;
+    border-radius: 20px;
+  }
+  html:not(.dark) .project-heading {
+    margin: 20px 10px 0;
+  }
+  html:not(.dark) .project-description {
+    margin-inline: 10px;
+  }
+  html:not(.dark) .project-card > .tags {
+    margin-inline: 10px;
+  }
+  html:not(.dark) .filter-bar {
+    padding: 8px;
+  }
+}
+@media print {
+  html:not(.dark) .main-shell::before {
+    display: none;
+  }
+}
 .hero-actions {
   flex-wrap: wrap;
   gap: 14px;

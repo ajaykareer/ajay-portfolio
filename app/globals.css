@@ -36,12 +36,13 @@
   --radius-xl: 16px;
 }
 :root {
-  --background: #f7f8fa;
+  --background: #f5f4f1;
   --foreground: #222528;
   --card: #fff;
-  --muted: #e9ecef;
-  --muted-foreground: #697078;
-  --border: #e1e4e7;
+  --muted: #eeece8;
+  --muted-foreground: #626970;
+  --border: #dfdeda;
+  --surface-shadow: 0 2px 5px #24282d03, 0 14px 34px -24px #24282d30;
   --primary: #ff6947;
   --primary-foreground: #202124;
   --ring: #ff6947;
@@ -60,6 +61,7 @@
   --primary-foreground: #17191d;
   --ring: #ff805f;
   --sidebar: #111316;
+  --surface-shadow: none;
   color-scheme: dark;
 }
 * {
