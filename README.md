@@ -1,67 +1,141 @@
-# Ajay Kareer — Portfolio
+<div align="center">
 
-Interactive React + TypeScript portfolio. Built with Vinext/Vite, with accessible Base UI and shadcn controls. The portfolio is a single page with hash navigation, so the browser Back button and direct links to sections work.
+<img src="public/og.png" alt="Ajay Kareer — Software & Hardware Engineer" width="100%" />
+
+# Software meets the real world.
+
+**My personal portfolio — iOS apps, business tools, and the systems behind them.**
+
+<p>
+  <img src="https://img.shields.io/badge/React-19-20232a?style=flat-square&logo=react&logoColor=61DAFB" alt="React 19" />
+  <img src="https://img.shields.io/badge/TypeScript-5-3178C6?style=flat-square&logo=typescript&logoColor=white" alt="TypeScript 5" />
+  <img src="https://img.shields.io/badge/Vite-8-646CFF?style=flat-square&logo=vite&logoColor=white" alt="Vite 8" />
+  <img src="https://img.shields.io/badge/Tailwind_CSS-4-0F172A?style=flat-square&logo=tailwindcss&logoColor=38BDF8" alt="Tailwind CSS 4" />
+  <img src="https://img.shields.io/badge/Motion-13-FF6947?style=flat-square" alt="Motion 13" />
+</p>
+
+[Explore the projects](#featured-projects) · [Run locally](#run-locally) · [Customize](#make-it-yours) · [LinkedIn](https://www.linkedin.com/in/ajaykareer/)
+
+</div>
+
+---
+
+## About
+
+I'm **Ajay Kareer**, a Software & Hardware Engineer at **CreativePOS** since June 2024, based in Ajax, Ontario. I build iOS apps, practical business software, and tools that connect software with the hardware people use every day.
+
+This repository contains my portfolio website. It brings my projects, experience, and background together in an app-like interface with five views: **Overview · Projects · Experience · About · Contact**.
+
+## The experience
+
+| Feature | What it does |
+| --- | --- |
+| ☀️ Light & dark themes | A warm drafting-grid light theme and a dark theme, with light mode on a fresh visit. |
+| ✨ Purposeful motion | Page transitions and staggered scroll reveals, with a saved motion preference. |
+| ⌘ Quick jump | Search pages and projects with **Ctrl / Cmd + K**. |
+| 🗂️ Project explorer | Filter by category and open detailed project stories, screenshots, and links. |
+| 🌍 Interactive contact | A rotating globe, moving stars, and a contact form with validation and delivery feedback. |
+| ♿ Thoughtful controls | Keyboard navigation, visible focus, reduced-motion support, and responsive layouts. |
+
+Native scrolling, responsive WebP images, and browser-native custom cursors keep the interface lightweight. The globe pauses when offscreen or hidden.
+
+## Featured projects
+
+These are projects showcased by the portfolio; their application source code is separate from this website.
+
+| Project | Built for | Explore |
+| --- | --- | --- |
+| **Creative POS Reporting** | Sales dashboards, daily and monthly reports, and configurable POS activity notifications for authorized business owners and managers. | [App Store](https://apps.apple.com/ng/app/creative-pos-reporting/id6799240504) |
+| **Kareer’s Walls** | High-quality iPhone wallpapers, curated collections, favourites, and a personalized For You feed. | Personal iOS project; public download not available yet |
+| **Word Shuffle** | A Salesforce word game with difficulty levels and saved results, built with Aura and Apex. | [Source](https://github.com/ajaykareer/Word-Shuffle-Game-Salesforce-Aura) |
+| **Windows Update Manager** | Menu-driven Windows update controls for POS terminals, kiosks, and PCs. | [Source](https://github.com/ajaykareer/Windows-Update-Manager) |
+
+<details>
+<summary><strong>More projects</strong></summary>
+
+- **[AKK Web Gallery](https://github.com/ajaykareer/web-gallery)** — a React and Firebase photo-gallery project.
+- **[DavosBet](https://github.com/ajaykareer/davosbet)** — a sports interface exploring scores, standings, and external data.
+- **[The Weather App](https://github.com/ajaykareer/WeatherAPP)** — a responsive city-weather lookup.
+
+AKK Web Gallery and DavosBet are adaptations of Diego Arndt's projects; attribution is retained in the portfolio.
+
+</details>
+
+## Under the hood
+
+| Layer | Technology |
+| --- | --- |
+| Interface | React 19 + TypeScript |
+| Framework & build | Vinext + Vite, exported as a static site |
+| Styling | Tailwind CSS 4 + custom CSS |
+| Controls | Base UI, shadcn, and Lucide icons |
+| Animation | Motion |
+| Globe | COBE, loaded on the Contact view |
+| Image preparation | Sharp + responsive WebP variants |
 
 ## Run locally
 
-Use Node.js 22 LTS (tested with 22.22.0). Node 24.11.1 can hit a Windows process-shutdown error after a successful Vinext build.
+Use **Node.js 22**; the project was tested with **22.22.0**. Download or clone this repository, then open the project folder in your terminal:
 
-```sh
+```bash
 npm ci
 npm run dev
 ```
 
-## Build
+Open the local URL printed in the terminal, usually **http://localhost:3000**.
 
-```sh
+### Build & preview
+
+```bash
 npm run build
 npm run preview
 ```
 
-The static website is written to `dist/client` and can also be hosted by any static website host. The production preview runs at `http://localhost:4173`. On Windows with Node 24 installed, the verified build command is:
+The static site is generated in `dist/client`. Preview it at **http://localhost:4173**. This output can be deployed to a static host; uploading source to GitHub alone does not deploy the website.
 
-```sh
+<details>
+<summary><strong>Using Node 24 on Windows?</strong></summary>
+
+Node 24.11.1 can encounter a Windows process-shutdown error after a successful Vinext build. Use Node 22, or run the verified build command:
+
+```bash
 npx --yes --package=node@22.22.0 node node_modules/vinext/dist/cli.js build
 ```
 
-## Edit your portfolio
+</details>
 
-- `app/portfolio.tsx`: project data, contact details, biography, experience, and interactions.
-- `app/globals.css`: colors, typography, layout, animations, and responsive styles.
-- `app/premium.css`: refined buttons, app artwork, profile layout, and cursor styling.
-- `public/cursor.svg`, `public/cursor-link.svg`, and `app/premium.css`: browser-native custom cursors, with standard text, drag, and disabled states. They work independently of Motion preferences and need no mouse-move JavaScript.
-- `app/page-motion.tsx` and `app/motion.css`: Motion-powered page transitions, staggered scroll entrances, a persistent motion preference, and a native CSS scroll progress indicator.
-- `app/profile-background.tsx`: education, certifications, and earlier employment.
-- `app/contact-page.tsx` and `app/contact.css`: dedicated Contact view, form feedback, and responsive layout.
-- `app/contact-orbit.tsx`: lazy-loaded COBE globe, moving starfield, drag/keyboard controls, and reduced-motion handling.
-- `lib/contact.ts`: EmailJS browser connection, validation, timeout, and direct-email fallback.
-- `app/layout.tsx`: page title and search metadata.
-- `public/projects/`: recovered portrait and project screenshots.
+## Make it yours
 
-Current role confirmed by Ajay: Software & Hardware Engineer, CreativePOS, June 1, 2024–present.
+| File | What to change |
+| --- | --- |
+| [`app/portfolio.tsx`](app/portfolio.tsx) | Projects, main content, navigation, and links |
+| [`app/profile-background.tsx`](app/profile-background.tsx) | Education, credentials, and earlier experience |
+| [`app/globals.css`](app/globals.css) | Theme tokens, typography, and layout |
+| [`app/premium.css`](app/premium.css) | Light-theme surfaces, project cards, artwork, and cursors |
+| [`app/page-motion.tsx`](app/page-motion.tsx) | Page transitions, reveals, and motion preferences |
+| [`app/contact-page.tsx`](app/contact-page.tsx) | Contact form and feedback |
+| [`app/contact-orbit.tsx`](app/contact-orbit.tsx) | Globe and starfield |
+| [`lib/contact.ts`](lib/contact.ts) | Contact delivery configuration and validation |
+| [`app/layout.tsx`](app/layout.tsx) | Metadata, fonts, and social preview |
+| [`public/projects`](public/projects) | Portrait and project images |
 
-Featured work includes Creative POS Reporting, Kareer’s Walls, Word Shuffle, and Windows Update Manager. The weather app appears last. Creative POS Reporting links to its public App Store listing; Kareer’s Walls has no public download link yet. iOS implementation frameworks are intentionally unspecified until confirmed by Ajay.
+See the [development notes](docs/development.md) for contact setup and asset maintenance, and the [GitHub guide](docs/github-guide.md) for saving future changes.
 
-Historical content and assets were recovered from ajaykareer.com, Ajay's GitHub repositories, and his LinkedIn profile. The current portrait, education, certifications, and earlier roles were checked on LinkedIn. See `docs/content-sources.md` for provenance and remaining content updates. AKK Web Gallery and DavosBet are adaptations of Diego Arndt's projects; their detail views include attribution.
+## Quality checks
 
-The Contact page sends name, email, and message through Ajay's EmailJS Contact Us template. The supplied template's receiving inbox is `kareer07@gmail.com`; its connected sending account is separate. The service ID, template ID, and browser public key supplied by Ajay are in `lib/contact.ts`; no private email credentials are included. The static site does not store submissions. The existing public email link (`ajaykareer06@gmail.com`) remains available and carries the draft into the visitor's email application if delivery fails. Every fresh page load starts in light mode; the toggle changes theme for the current visit. No analytics or tracking are installed. Add the downloadable résumé when Ajay supplies the final file.
+```bash
+npx tsc --noEmit
+node --experimental-strip-types --test tests/contact.test.mjs
+```
 
-## Contact delivery
+Contact tests use mocked requests and send no email. The [QA report](docs/qa-report.md) records the September 2026 desktop, mobile, keyboard, and contact checks, including their limits. Content references and credits are listed in [content sources](docs/content-sources.md).
 
-The EmailJS account must have an active email service and template. If it uses an origin allowlist, include `https://ajay-kareer-portfolio.goli15.chatgpt.site`, `https://ajaykareer.com`, and the local development origin as needed. The supplied Contact Us template uses `name`, `email`, `message`, `title`, `date`, and `time`. Configure To Email as the chosen fixed inbox and Reply To as `{{email}}`. Browser identifiers are designed to be public; never add an EmailJS private key to this client file. `docs/emailjs-template.html` is an optional portfolio-branded email body to replace the existing template's “The Sarcastic Tales” branding without changing its fields.
+---
 
-The form validates fields, blocks accidental duplicate submissions, includes a honeypot, and waits for EmailJS's positive response before showing success. These browser checks do not replace provider-side spam controls. Ajay confirmed successful inbox delivery with a received test message on September 17, 2026. Implementation checks use mocked requests and send no messages. Run the contact checks with `node --experimental-strip-types --test tests/contact.test.mjs` on Node 22.22.0 or newer.
+<div align="center">
 
-The animated globe and stars run only in the Contact view, pause when hidden/offscreen, and stop automatically for reduced-motion preferences. WebGL is optional: the form remains available if the globe cannot render.
+**Apps. Systems. Ideas.**
 
-## Motion behavior
+[Ajay Kareer](https://github.com/ajaykareer) · [LinkedIn](https://www.linkedin.com/in/ajaykareer/)
 
-Motion (the `motion` package) handles page exit/entry and one-time viewport reveals. Pages fade out before the next view mounts; cards rise in with a short stagger. Only opacity and transforms animate. Scroll stays native, with no JavaScript scroll handler, portrait parallax, animated blur, or pointer-driven card lighting. The progress line uses CSS scroll timelines where supported. Print and no-JavaScript styles keep content visible.
-
-The Motion switch beside the theme button follows the device’s reduced-motion preference by default. Visitors can explicitly enable or reduce motion for this site; their choice is saved locally per origin. The same preference controls entrances, the globe, and stars. The static custom cursor remains available on desktop even with motion reduced. Keyboard focus reveals interactive items immediately. Navigation moves focus to the new heading after its page entrance finishes.
-
-Portrait and large project screenshots use responsive WebP variants; originals remain available for editing. Regenerate variants with `node scripts/optimize-images.mjs`, which uses the pinned Sharp development dependency. Tailwind scans the app and the seven UI primitives it uses; when adding a new UI primitive, add its source to `app/globals.css`.
-
-See `docs/qa-report.md` for the website checks and measured asset reductions. For local diagnostics only, `npm run preview -- --audit` enables console performance samples at `http://localhost:4173/?audit=1`; it sends no data and is not part of the hosted build. Browser automation can distort frame timings, so these samples are not a performance score.
-
-Keep this folder backed up or push it to your own Git repository to retain the complete source.
+</div>
