@@ -1,6 +1,6 @@
 # Save portfolio updates to GitHub
 
-Run these commands from your portfolio folder after connecting it to your chosen GitHub repository.
+This project is connected to the private [ajaykareer/ajay-portfolio repository](https://github.com/ajaykareer/ajay-portfolio), using the remote name `origin` and branch `main`. Run these commands from your portfolio folder.
 
 ## Each time you update the site
 
@@ -28,9 +28,11 @@ Open **Source Control** (`Ctrl + Shift + G`), review your changes, stage the fil
 
 ## When working from another computer
 
-Clone your GitHub repository, open its folder, then run:
+While signed in to GitHub, clone the repository and install its dependencies:
 
 ```bash
+git clone https://github.com/ajaykareer/ajay-portfolio.git
+cd ajay-portfolio
 npm ci
 npm run dev
 ```

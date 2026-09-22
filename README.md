@@ -75,9 +75,11 @@ AKK Web Gallery and DavosBet are adaptations of Diego Arndt's projects; attribut
 
 ## Run locally
 
-Use **Node.js 22**; the project was tested with **22.22.0**. Download or clone this repository, then open the project folder in your terminal:
+Use **Node.js 22**; the project was tested with **22.22.0**. Clone the repository while signed in to GitHub, then start the local server:
 
 ```bash
+git clone https://github.com/ajaykareer/ajay-portfolio.git
+cd ajay-portfolio
 npm ci
 npm run dev
 ```
