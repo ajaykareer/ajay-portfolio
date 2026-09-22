@@ -1,6 +1,6 @@
 # Save portfolio updates to GitHub
 
-This project is connected to the private [ajaykareer/ajay-portfolio repository](https://github.com/ajaykareer/ajay-portfolio), using the remote name `origin` and branch `main`. Run these commands from your portfolio folder.
+This project is connected to the public [ajaykareer/ajay-portfolio repository](https://github.com/ajaykareer/ajay-portfolio), using the remote name `origin` and branch `main`. Run these commands from your portfolio folder.
 
 ## Each time you update the site
 
