@@ -9,7 +9,7 @@ Updated September 17, 2026.
 - **Existing projects:** https://github.com/ajaykareer and https://ajaykareer.com — existing repository links and recovered web project screenshots. Existing fork attribution is retained.
 - **Contact delivery:** The form uses an EmailJS service, template, and browser public key. Its request matches the template's name, email, message, title, date, and time fields. Inbox delivery was confirmed on September 17, 2026; the receiving inbox is configured in the provider's template.
 - **Interactive globe:** COBE 2.0.1, https://cobe.vercel.app/ — geographic globe renderer. The Ontario marker represents Ajay's stated location; no customer or traffic data is implied. The animated starfield is decorative.
-- **Word Shuffle web demo:** Adapted from Ajay's public Aura `BoardController.js` and `BoardHelper.js` in https://github.com/ajaykareer/Word-Shuffle-Game-Salesforce-Aura. The original uses 9, 16, or 36 hidden word tiles and three picks to find the target; it is not a letter-rearranging puzzle. The browser adaptation adds an untimed study step and uses its own word set. Demo rounds stay in memory and are not saved to Salesforce.
+- **Word Shuffle web demo:** Adapted from Ajay's public Aura `BoardController.js` and `BoardHelper.js` in https://github.com/ajaykareer/Word-Shuffle-Game-Salesforce-Aura. The original uses 9, 16, or 36 hidden word tiles and three picks to find the target; it is not a letter-rearranging puzzle. The browser adaptation adds an untimed study step and uses its own word set. A random target is chosen only when the board is hidden; studying again clears it and the next hide chooses a different target. Demo rounds stay in memory and are not saved to Salesforce.
 
 ## Follow-up content
 

@@ -61,17 +61,20 @@ const words = [
 export type ShuffleRound = {
   difficulty: Difficulty;
   board: string[];
-  target: string;
+  previousTarget: string | null;
   opened: number[];
-  phase: RoundPhase;
-};
+} & (
+  | { phase: 'study'; target: null }
+  | { phase: Exclude<RoundPhase, 'study'>; target: string }
+);
 
 // The first board is deterministic so server rendering and hydration match.
 export function initialRound(): ShuffleRound {
   return {
     difficulty: 'easy',
     board: words.slice(0, 9),
-    target: 'LOGIC',
+    target: null,
+    previousTarget: null,
     opened: [],
     phase: 'study',
   };
@@ -79,7 +82,7 @@ export function initialRound(): ShuffleRound {
 
 export function createRound(
   difficulty: Difficulty,
-  previousTarget?: string,
+  previousTarget?: string | null,
   random: () => number = Math.random,
 ): ShuffleRound {
   const shuffled = [...words];
@@ -88,21 +91,37 @@ export function createRound(
     [shuffled[index], shuffled[swap]] = [shuffled[swap], shuffled[index]];
   }
   const board = shuffled.slice(0, difficulties[difficulty].count);
-  let targetIndex = Math.floor(random() * board.length);
-  if (board[targetIndex] === previousTarget)
-    targetIndex = (targetIndex + 1) % board.length;
   return {
     difficulty,
     board,
-    target: board[targetIndex],
+    target: null,
+    previousTarget: previousTarget ?? null,
     opened: [],
     phase: 'study',
   };
 }
 
-export function startRound(round: ShuffleRound): ShuffleRound {
+export function startRound(
+  round: ShuffleRound,
+  random: () => number = Math.random,
+): ShuffleRound {
   if (round.phase !== 'study') return round;
-  return { ...round, opened: [], phase: 'playing' };
+  const candidates = round.board.filter(
+    (word) => word !== round.previousTarget,
+  );
+  const target = candidates[Math.floor(random() * candidates.length)];
+  return {
+    ...round,
+    target,
+    previousTarget: target,
+    opened: [],
+    phase: 'playing',
+  };
+}
+
+export function studyRound(round: ShuffleRound): ShuffleRound {
+  if (round.phase !== 'playing') return round;
+  return { ...round, target: null, opened: [], phase: 'study' };
 }
 
 export function revealTile(round: ShuffleRound, index: number): ShuffleRound {

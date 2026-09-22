@@ -17,6 +17,7 @@ import {
   initialRound,
   revealTile,
   startRound,
+  studyRound,
   type Difficulty,
 } from '@/lib/word-shuffle';
 import { usePortfolioMotion } from './page-motion';
@@ -38,13 +39,15 @@ export function WordShuffle({ compact = false }: { compact?: boolean }) {
   }, [phase]);
 
   function newBoard(level: Difficulty = difficulty) {
-    setRound(createRound(level, target));
+    setRound(createRound(level, target ?? round.previousTarget));
     setRoundNumber((number) => number + 1);
   }
 
   const announcement =
     phase === 'study'
-      ? `Find ${target} and remember its tile. Take your time, then hide the words.`
+      ? round.previousTarget
+        ? 'Study the whole board again. Hiding it will choose a different target and reset your three picks.'
+        : 'Remember the words and their places. Your target is chosen only after you hide the board.'
       : phase === 'won'
         ? `You found ${target} in ${opened.length} ${opened.length === 1 ? 'pick' : 'picks'}. Nicely done!`
         : phase === 'lost'
@@ -63,7 +66,8 @@ export function WordShuffle({ compact = false }: { compact?: boolean }) {
           <>
             <Heading id={headingId}>Play the web demo</Heading>
             <p>
-              Study the words. Hide the board. Find your target in three picks.
+              Study every word. Hide the board to reveal a random target, then
+              find it in three picks.
             </p>
           </>
         ) : (
@@ -77,18 +81,18 @@ export function WordShuffle({ compact = false }: { compact?: boolean }) {
               <em>One good memory.</em>
             </Heading>
             <p>
-              Meet Word Shuffle. Study the words, hide the board, then find your
-              target in three picks.
+              Meet Word Shuffle. Memorize the board, hide it to reveal a random
+              target, then find that word in three picks.
             </p>
             <ol className="shuffle-steps">
               <li>
-                <span>01</span> Find your word.
+                <span>01</span> Study every word.
               </li>
               <li>
-                <span>02</span> Remember its place.
+                <span>02</span> Hide to reveal your target.
               </li>
               <li>
-                <span>03</span> Hide. Pick. Celebrate.
+                <span>03</span> Remember. Pick. Celebrate.
               </li>
             </ol>
             <div className="shuffle-origin">
@@ -139,8 +143,8 @@ export function WordShuffle({ compact = false }: { compact?: boolean }) {
         </div>
         <div className="shuffle-target">
           <div>
-            <span>YOUR WORD</span>
-            <strong>{target}</strong>
+            <span>{phase === 'study' ? 'TARGET HIDDEN' : 'YOUR WORD'}</span>
+            <strong>{phase === 'study' ? '?????' : target}</strong>
           </div>
           <div
             className="shuffle-chances"
@@ -251,13 +255,9 @@ export function WordShuffle({ compact = false }: { compact?: boolean }) {
           <Button
             className="shuffle-primary"
             onClick={() => {
-              if (phase === 'study') setRound((current) => startRound(current));
+              if (phase === 'study') setRound(startRound(round));
               else if (phase === 'playing')
-                setRound((current) => ({
-                  ...current,
-                  phase: 'study',
-                  opened: [],
-                }));
+                setRound((current) => studyRound(current));
               else newBoard();
             }}
           >

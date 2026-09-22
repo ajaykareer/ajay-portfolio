@@ -34,7 +34,7 @@ This repository contains my portfolio website. It brings my projects, experience
 | ✨ Purposeful motion | Page transitions and staggered scroll reveals, with a saved motion preference. |
 | ⌘ Quick jump | Search pages and projects with **Ctrl / Cmd + K**. |
 | 🗂️ Project explorer | Filter by category and open detailed project stories, screenshots, and links. |
-| 🧩 Playable Word Shuffle | Study a word board, hide it, and find the target in three picks across three difficulty levels. |
+| 🧩 Playable Word Shuffle | Study a word board, hide it to reveal a random target, and find it in three picks. Studying again gives a different target. |
 | 🌍 Interactive contact | A rotating globe, moving stars, and a contact form with validation and delivery feedback. |
 | ♿ Thoughtful controls | Keyboard navigation, visible focus, reduced-motion support, and responsive layouts. |
 

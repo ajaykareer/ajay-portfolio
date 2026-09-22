@@ -54,3 +54,9 @@ Optional local performance logging is available through `npm run preview -- --au
 - Desktop light/dark layouts and 390px/320px phone layouts checked. No page or dialog horizontal overflow; the narrowest tile at 320px was 44.5px wide.
 - Motion off removes animated tile faces and win confetti. No browser console errors reported during the final game check.
 - TypeScript and the production build passed. Build used Node 22.22.0 and the Vinext CLI directly after the wrapper encountered a Windows npm-path error.
+
+### Hidden-target revision
+
+- Study mode has no selected target. Hiding the board chooses one randomly from its words; studying again clears the target and guesses while preserving tile positions. The next attempt excludes the previous target.
+- All eight game tests passed, including repeat-target prevention across all difficulties and random boundary samples. TypeScript and the Node 22 production build passed.
+- Tested the built output in the browser: no target on the study screen, all tile words hidden when a target appears, unchanged positions after studying again, a different target on the next attempt, and a successful keyboard selection. No browser console errors reported.
