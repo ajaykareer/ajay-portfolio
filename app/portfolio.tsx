@@ -27,6 +27,7 @@ import {
 } from 'lucide-react';
 import { ProfileBackground, CareerHistory } from './profile-background';
 import { ContactPage } from './contact-page';
+import { WordShuffle } from './word-shuffle';
 import {
   MotionProvider,
   MotionToggle,
@@ -202,7 +203,7 @@ const projects: Project[] = [
     description:
       'A word game built inside Salesforce, with difficulty levels and saved results.',
     details:
-      'A Salesforce game built with Aura components and Apex. Players pick a difficulty, rearrange letters, and try to find the target word within three attempts. Results are stored for each user.',
+      'A Salesforce game built with Aura components and Apex. Players choose a difficulty and reveal hidden word tiles to find a target within three attempts. Results are stored for each user in Salesforce. The browser adaptation adds a study step for a quick memory challenge and does not save results.',
     features: [
       'Three difficulty levels and a reshuffle action',
       'Three attempts with in-game feedback',
@@ -392,6 +393,11 @@ function ProjectCard({
           )}
         </div>
       </button>
+      {project.id === 'word-shuffle' && (
+        <Button className="shuffle-card-link" variant="ghost" onClick={() => onOpen(project)}>
+          <Puzzle size={16} /> Play the web demo <ArrowUpRight size={15} />
+        </Button>
+      )}
       <p className="project-description">{project.description}</p>
       <div className="tags">
         {project.stack.slice(0, 3).map((tag) => (
@@ -702,6 +708,7 @@ export default function Portfolio() {
                         ))}
                       </div>
                     </section>
+                    <WordShuffle />
                   </>
                 )}
 
@@ -992,7 +999,9 @@ export default function Portfolio() {
                     {selected.description}
                   </DialogDescription>
                 </DialogHeader>
-                {selected.gallery ? (
+                {selected.id === 'word-shuffle' ? (
+                  <WordShuffle compact />
+                ) : selected.gallery ? (
                   <div className="project-gallery">
                     {selected.gallery.map((image) => (
                       <figure key={image.file}>

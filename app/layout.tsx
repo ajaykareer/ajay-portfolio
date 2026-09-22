@@ -4,6 +4,7 @@ import './globals.css';
 import './premium.css';
 import './contact.css';
 import './motion.css';
+import './word-shuffle.css';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',

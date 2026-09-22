@@ -45,3 +45,12 @@ Image totals compare the originals with the largest new WebP variants; smaller r
 - `git diff --check`: passed.
 
 Optional local performance logging is available through `npm run preview -- --audit` at `http://localhost:4173/?audit=1`. These diagnostics are not shipped or transmitted. Automated browser frame timings were not reliable enough to report an FPS result.
+
+## Word Shuffle demo — September 22, 2026
+
+- Added to Overview and the Word Shuffle project dialog. The browser adaptation includes an untimed study step and does not save Salesforce results.
+- Six game-model tests passed: board sizes and uniqueness, study/start behavior, valid wins, repeated/invalid picks, third-miss loss, and a correct third pick.
+- Browser checks covered all three difficulty levels, winning, losing, replaying, studying again, keyboard activation, initial tile focus, and Escape returning focus to the project action.
+- Desktop light/dark layouts and 390px/320px phone layouts checked. No page or dialog horizontal overflow; the narrowest tile at 320px was 44.5px wide.
+- Motion off removes animated tile faces and win confetti. No browser console errors reported during the final game check.
+- TypeScript and the production build passed. Build used Node 22.22.0 and the Vinext CLI directly after the wrapper encountered a Windows npm-path error.

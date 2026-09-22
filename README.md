@@ -34,6 +34,7 @@ This repository contains my portfolio website. It brings my projects, experience
 | ✨ Purposeful motion | Page transitions and staggered scroll reveals, with a saved motion preference. |
 | ⌘ Quick jump | Search pages and projects with **Ctrl / Cmd + K**. |
 | 🗂️ Project explorer | Filter by category and open detailed project stories, screenshots, and links. |
+| 🧩 Playable Word Shuffle | Study a word board, hide it, and find the target in three picks across three difficulty levels. |
 | 🌍 Interactive contact | A rotating globe, moving stars, and a contact form with validation and delivery feedback. |
 | ♿ Thoughtful controls | Keyboard navigation, visible focus, reduced-motion support, and responsive layouts. |
 
@@ -128,6 +129,7 @@ See the [development notes](docs/development.md) for contact setup and asset mai
 ```bash
 npx tsc --noEmit
 node --experimental-strip-types --test tests/contact.test.mjs
+node --experimental-strip-types --test tests/word-shuffle.test.mjs
 ```
 
 Contact tests use mocked requests and send no email. The [QA report](docs/qa-report.md) records the September 2026 desktop, mobile, keyboard, and contact checks, including their limits. Content references and credits are listed in [content sources](docs/content-sources.md).
