@@ -722,7 +722,7 @@ h1 em {
     height: 66px;
     top: auto;
     right: 0;
-    padding: 8px 14px;
+    padding: 8px;
     border-radius: 18px 18px 0 0;
   }
   .monogram,
@@ -731,11 +731,13 @@ h1 em {
   }
   .sidebar nav {
     margin: 0;
-    display: flex;
-    justify-content: space-around;
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 4px;
   }
   .nav-item {
-    width: 56px !important;
+    width: 100% !important;
+    min-width: 0;
     margin: 2px 0 !important;
     height: 44px !important;
   }
@@ -834,6 +836,12 @@ h1 em {
   .page-footer > span:last-child {
     text-align: right;
     max-width: 160px;
+  }
+}
+@media (max-width: 400px) {
+  .topbar .breadcrumb-muted,
+  .topbar .breadcrumb-slash {
+    display: none;
   }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -1725,9 +1733,14 @@ h1:focus {
   }
   .page-footer {
     font-size: 12px;
+    flex-direction: column;
+    gap: 8px;
   }
   .page-footer > button {
-    max-width: 160px;
+    max-width: none;
+    white-space: nowrap;
+    min-height: 44px;
+    text-align: left;
   }
   .portrait-caption {
     font-size: 11px;

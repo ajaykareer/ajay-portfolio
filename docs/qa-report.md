@@ -60,3 +60,12 @@ Optional local performance logging is available through `npm run preview -- --au
 - Study mode has no selected target. Hiding the board chooses one randomly from its words; studying again clears the target and guesses while preserving tile positions. The next attempt excludes the previous target.
 - All eight game tests passed, including repeat-target prevention across all difficulties and random boundary samples. TypeScript and the Node 22 production build passed.
 - Tested the built output in the browser: no target on the study screen, all tile words hidden when a target appears, unchanged positions after studying again, a different target on the next attempt, and a successful keyboard selection. No browser console errors reported.
+
+## Playground and visit scoreboard — September 23, 2026
+
+- Added a Playground navigation destination and an Overview invitation. The project dialog still offers the same game.
+- All 12 game/scoring tests, TypeScript, and `npm run build` passed.
+- Browser checks verified winning points, missed rounds, shared totals between Playground and the project dialog, manual score reset, and refresh clearing a completed result.
+- Phone footer text measured as one line at 320px. All six bottom navigation buttons measured at least 44px in both dimensions. The compact header prevents horizontal page overflow on Playground at that width.
+- Visually reviewed the phone footer and scoreboard at 390px, plus the desktop dark scoreboard. No browser console errors reported.
+- [Scoreboard rules and lifespan](playground.md) are documented separately.

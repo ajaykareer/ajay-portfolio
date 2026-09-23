@@ -14,6 +14,141 @@
   background: var(--shuffle-soft);
   color: var(--foreground);
 }
+.playground-games .shuffle-lab {
+  margin-top: 32px;
+}
+.playground-invitation {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin-top: 48px;
+  padding: 28px;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background: var(--card);
+}
+.playground-invitation-icon {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 60px;
+  height: 60px;
+  border-radius: 16px;
+  color: var(--primary);
+  background: var(--muted);
+}
+.playground-invitation h2 {
+  font-size: 25px;
+  margin: 7px 0;
+  letter-spacing: -0.04em;
+}
+.playground-invitation p {
+  margin: 0;
+}
+.playground-invitation p:last-child {
+  color: var(--muted-foreground);
+  font-size: 14px;
+  line-height: 1.7;
+}
+.playground-invitation > button {
+  flex-shrink: 0;
+  margin-left: auto;
+}
+.shuffle-scoreboard {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid var(--shuffle-line);
+}
+.scoreboard-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.scoreboard-heading h3 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+}
+.scoreboard-heading h3 svg {
+  color: var(--shuffle-accent);
+}
+.scoreboard-heading button {
+  min-height: 44px;
+  font-size: 12px;
+  padding: 0 8px;
+}
+.scoreboard-note,
+.scoreboard-empty,
+.scoreboard-rules {
+  font-size: 12px;
+  line-height: 1.7;
+  color: var(--muted-foreground);
+}
+.scoreboard-note {
+  margin: 0 0 16px;
+}
+.scoreboard-stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 6px;
+  margin: 0;
+}
+.scoreboard-stats > div {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 4px;
+  padding: 12px 5px;
+  text-align: center;
+  border-radius: 10px;
+  background: var(--shuffle-soft);
+}
+.scoreboard-stats dt {
+  font-size: 11px;
+  color: var(--muted-foreground);
+}
+.scoreboard-stats dd {
+  margin: 0;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 23px;
+  color: var(--shuffle-accent);
+}
+.scoreboard-results {
+  list-style: none;
+  padding: 0;
+  margin: 14px 0;
+}
+.scoreboard-results li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 0;
+  border-bottom: 1px solid var(--shuffle-line);
+  color: var(--muted-foreground);
+  font-size: 12px;
+}
+.scoreboard-results strong {
+  margin-left: auto;
+  color: var(--shuffle-accent);
+}
+.scoreboard-result {
+  min-width: 45px;
+  font-weight: 600;
+}
+.scoreboard-result[data-won='true'] {
+  color: var(--shuffle-accent);
+}
+.scoreboard-rules summary {
+  cursor: pointer;
+  min-height: 32px;
+  padding-top: 6px;
+}
+.scoreboard-rules p {
+  margin: 4px 0 0;
+}
 .shuffle-card-link {
   align-self: flex-start;
   margin-top: 13px;
@@ -436,6 +571,12 @@ html:not(.dark) .project-card .shuffle-card-link {
   }
 }
 @media (max-width: 1100px) {
+  .playground-invitation {
+    flex-wrap: wrap;
+  }
+  .playground-invitation > button {
+    margin-left: 0;
+  }
   .shuffle-lab {
     grid-template-columns: minmax(0, 1fr);
     gap: 24px;
@@ -451,6 +592,18 @@ html:not(.dark) .project-card .shuffle-card-link {
   }
 }
 @media (max-width: 600px) {
+  .playground-invitation {
+    padding: 22px;
+    gap: 16px;
+  }
+  .playground-invitation-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+  }
+  .scoreboard-heading {
+    flex-wrap: wrap;
+  }
   .shuffle-lab {
     padding: 18px 12px 12px;
     margin-top: 42px;

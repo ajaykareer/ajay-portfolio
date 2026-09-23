@@ -1,7 +1,7 @@
 'use client';
 /* oxlint-disable next/no-img-element -- Static export uses precompressed responsive images; no runtime image service is needed. */
 
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
 import {
   ArrowUpRight,
   ArrowRight,
@@ -24,10 +24,12 @@ import {
   CalendarDays,
   Smartphone,
   Wallpaper,
+  Gamepad2,
 } from 'lucide-react';
 import { ProfileBackground, CareerHistory } from './profile-background';
 import { ContactPage } from './contact-page';
 import { WordShuffle } from './word-shuffle';
+import { GameSessionProvider } from './game-session';
 import {
   MotionProvider,
   MotionToggle,
@@ -53,7 +55,13 @@ import {
   CommandItem,
 } from '@/components/ui/command';
 
-type View = 'overview' | 'projects' | 'experience' | 'about' | 'contact';
+type View =
+  | 'overview'
+  | 'projects'
+  | 'experience'
+  | 'about'
+  | 'playground'
+  | 'contact';
 type Filter =
   | 'All projects'
   | 'iOS apps'
@@ -88,6 +96,7 @@ const nav = [
   { id: 'projects', name: 'Projects', icon: Layers3 },
   { id: 'experience', name: 'Experience', icon: BriefcaseBusiness },
   { id: 'about', name: 'About me', icon: UserRound },
+  { id: 'playground', name: 'Playground', icon: Gamepad2 },
   { id: 'contact', name: 'Contact', icon: Mail },
 ] as const;
 const projects: Project[] = [
@@ -203,7 +212,7 @@ const projects: Project[] = [
     description:
       'A word game built inside Salesforce, with difficulty levels and saved results.',
     details:
-      'A Salesforce game built with Aura components and Apex. Players choose a difficulty and reveal hidden word tiles to find a target within three attempts. Results are stored for each user in Salesforce. The browser adaptation adds a study step for a quick memory challenge and does not save results.',
+      'A Salesforce game built with Aura components and Apex. Players choose a difficulty and reveal hidden word tiles to find a target within three attempts. Results are stored for each user in Salesforce. The browser adaptation adds a study step and a temporary scoreboard for this visit, with no Salesforce connection.',
     features: [
       'Three difficulty levels and a reshuffle action',
       'Three attempts with in-game feedback',
@@ -408,6 +417,14 @@ function ProjectCard({
   );
 }
 
+function PortfolioProviders({ children }: { children: ReactNode }) {
+  return (
+    <GameSessionProvider>
+      <MotionProvider>{children}</MotionProvider>
+    </GameSessionProvider>
+  );
+}
+
 export default function Portfolio() {
   const [view, setView] = useState<View>('overview');
   const [filter, setFilter] = useState<Filter>('All projects');
@@ -472,7 +489,7 @@ export default function Portfolio() {
   );
 
   return (
-    <MotionProvider>
+    <PortfolioProviders>
       <div className="portfolio-app">
         <ScrollProgress />
         <a
@@ -708,7 +725,39 @@ export default function Portfolio() {
                         ))}
                       </div>
                     </section>
-                    <WordShuffle />
+                    <Reveal className="playground-invitation">
+                      <div className="playground-invitation-icon">
+                        <Gamepad2 size={28} aria-hidden="true" />
+                      </div>
+                      <div>
+                        <p className="eyebrow">A LITTLE BRAIN BREAK</p>
+                        <h2>Curious? Come play.</h2>
+                        <p>
+                          Try Word Shuffle, test your memory, and set a score
+                          for this visit.
+                        </p>
+                      </div>
+                      <Button onClick={() => navigate('playground')} className="primary-action">
+                        Open Playground <ArrowUpRight size={17} />
+                      </Button>
+                    </Reveal>
+                  </>
+                )}
+                {view === 'playground' && (
+                  <>
+                    <Reveal className="view-heading" distance={32}>
+                      <p className="eyebrow">PLAYGROUND / SMALL INTERACTIVE EXPERIMENTS</p>
+                      <h1 ref={pageHeading} tabIndex={-1}>
+                        A little play. <em>A fresh perspective.</em>
+                      </h1>
+                      <p>
+                        Take a quick break with Word Shuffle. Your scoreboard
+                        follows you around this visit and resets on refresh.
+                      </p>
+                    </Reveal>
+                    <div className="playground-games">
+                      <WordShuffle />
+                    </div>
                   </>
                 )}
 
@@ -1169,6 +1218,6 @@ export default function Portfolio() {
           </DialogContent>
         </Dialog>
       </div>
-    </MotionProvider>
+    </PortfolioProviders>
   );
 }

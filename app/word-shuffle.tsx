@@ -21,11 +21,14 @@ import {
   type Difficulty,
 } from '@/lib/word-shuffle';
 import { usePortfolioMotion } from './page-motion';
+import { SessionScoreboard, useGameSession } from './game-session';
 
 export function WordShuffle({ compact = false }: { compact?: boolean }) {
   const [round, setRound] = useState(initialRound);
   const [roundNumber, setRoundNumber] = useState(1);
   const firstTile = useRef<HTMLButtonElement>(null);
+  const recordedRound = useRef(false);
+  const { record } = useGameSession();
   const headingId = useId();
   const instructionsId = useId();
   const { reduced } = usePortfolioMotion();
@@ -39,8 +42,25 @@ export function WordShuffle({ compact = false }: { compact?: boolean }) {
   }, [phase]);
 
   function newBoard(level: Difficulty = difficulty) {
+    recordedRound.current = false;
     setRound(createRound(level, target ?? round.previousTarget));
     setRoundNumber((number) => number + 1);
+  }
+
+  function pickTile(index: number) {
+    const next = revealTile(round, index);
+    setRound(next);
+    if (
+      (next.phase === 'won' || next.phase === 'lost') &&
+      !recordedRound.current
+    ) {
+      recordedRound.current = true;
+      record({
+        difficulty: next.difficulty,
+        won: next.phase === 'won',
+        picks: next.opened.length,
+      });
+    }
   }
 
   const announcement =
@@ -205,9 +225,7 @@ export function WordShuffle({ compact = false }: { compact?: boolean }) {
                 }
                 aria-disabled={inactive}
                 tabIndex={inactive ? -1 : 0}
-                onClick={() =>
-                  setRound((current) => revealTile(current, index))
-                }
+                onClick={() => pickTile(index)}
               >
                 <span className="shuffle-tile-number" aria-hidden="true">
                   {String(index + 1).padStart(2, '0')}
@@ -282,9 +300,8 @@ export function WordShuffle({ compact = false }: { compact?: boolean }) {
             <Shuffle size={16} /> New board
           </Button>
         </div>
-        <p className="shuffle-note">
-          Just for fun. No sign-in or scores saved.
-        </p>
+        <p className="shuffle-note">Just for fun. No sign-in needed.</p>
+        <SessionScoreboard />
       </div>
     </section>
   );
